@@ -5,13 +5,12 @@ services:
     image: mongo:6.0
     environment:
       - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=123qwe
-      - MONGO_INITDB_DATABASE=productCatalogDB
+      - MONGO_INITDB_ROOT_PASSWORD=admin
       - TZ=America/Sao_Paulo
     ports:
       - 27017:27017
     volumes:
-      - .mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
       - ./backup:/data/db:rw
       
   api:
@@ -26,5 +25,7 @@ services:
       - 2000:2000
     working_dir: /api
     command: bash -c "npm install && npm run dev"
+    depends_on:
+      - database
   
 #docker compose -f docker-compose.dev.yaml up
