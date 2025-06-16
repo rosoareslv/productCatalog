@@ -1,0 +1,18 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "API de Catálogo de Produtos",
+    "version": "1.0.0",
+    "description": "Documentação da API de Catálogo de Produtos"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:2000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {}
+  }
+}

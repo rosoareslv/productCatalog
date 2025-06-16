@@ -1,0 +1,50 @@
+{
+    "/product/save": {
+        "post": {
+            "summary": "Salva produto no banco",
+            "tags": ["Product"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ProductRegisterSave"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Produto cadastrado com sucesso"
+                },
+                "500": {
+                    "description": "Erro interno ao cadastrar produto"
+                }
+            }
+        }
+    },
+    "/product/update": {
+        "patch": {
+            "summary": "Atualiza produto no banco",
+            "tags": ["Product"],
+            "requestBody": {
+                "required": true,
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "$ref": "#/components/schemas/ProductRegisterUpdate"
+                        }
+                    }
+                }
+            },
+            "responses": {
+                "200": {
+                    "description": "Produto atualizado com sucesso"
+                },
+                "500": {
+                    "description": "Erro interno ao atualizar produto"
+                }
+            }
+        }
+    }
+}
