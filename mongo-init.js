@@ -1,12 +1,16 @@
-db = db.getSiblingDB('dbko_db');
+const db = db.getSiblingDB('catalogDB');
 
 db.createUser({
-  user: "dbko_master",
+  user: "master",
   pwd: "123qwe",
   roles: [
     {
-      role: "readWrite",
-      db: "dbOwner"
+      role: "dbOwner",
+      db: "catalogDB"
     }
   ]
 });
+
+db.createCollection('users');
+db.createCollection('products');
+db.createCollection('categories');

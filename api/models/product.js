@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
@@ -9,6 +9,6 @@ const productSchema = new Schema({
   ownerId: UUID,
 });
 
-const product = mongoose.model('productSchema', productSchema);
+const Product = mongoose.model('Product', productSchema);
 
-module.exports = { product }
+module.exports = Product

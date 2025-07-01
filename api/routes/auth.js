@@ -25,6 +25,7 @@ router.post('/register', async (req, res) => {
 })
 
 
+//verificar se ja possui token ativo
 router.post('/login', async (req, res) => {
     try {
         let { username, password } = req.body
@@ -33,13 +34,14 @@ router.post('/login', async (req, res) => {
         if (!is_user) {
             return res.status(401).json({ "message": "Não autorizado" })
         }
-        let user_token = token.createToken()
+        let user_token = token.createToken({"username": username})
         return res.status(200).json({ 
             "message": "Usuário autenticado com sucesso",
             "username" : username,
             "token": user_token
         })
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ "message": "Erro interno no servidor" })
     }
 
