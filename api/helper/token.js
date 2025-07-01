@@ -4,8 +4,10 @@ const { decode } = require("punycode");
 
 const privateKey = fs.readFileSync("./keys/id_rsa").toString()
 
-function createToken(data) {
-    return jwt.sign(data, privateKey, { algorithm: 'RS256', expiresIn: "24h" });
+
+function createToken(username) {
+    return jwt.sign({ username: username }, privateKey, { algorithm: 'RS256', expiresIn: '24h' });
+
 }
 
 function checkToken(token) {
