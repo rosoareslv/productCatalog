@@ -2,12 +2,13 @@ const mongoose = require('mongoose')
 const { Schema } = mongoose;
 
 const productSchema = new Schema({
-  title: String,
-  description: String,
-  price: Number,
-  category: String,
-  ownerId: UUID,
-});
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  price: { type: Number, required: true },
+  category: { type: String, required: true },
+  ownerId: { type: mongoose.ObjectId, required: true },
+  lastUpdateDate: { type: Date, default: Date.now, required: true }
+},);
 
 const Product = mongoose.model('Product', productSchema);
 

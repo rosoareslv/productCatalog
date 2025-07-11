@@ -3,24 +3,24 @@ const Product = require("../models/product")
 const router = express.Router()
 
 
-router.post("/save", (req, res) => {
+router.post("/save", async (req, res) => {
     try {
-        //validar campos passados
-
-        //pegar pelo token o username, e atribui o ownerId o id do user na base
-        //salvar produto
-        //retornar produto salvo
         let body = req.body
-        let headers = req.headers
-        console.log(headers)
+        body.ownerId = req.requestorUUID
         let product = new Product(body)
-
-
+        console.log(product)
+        await product.save()
+        return res.status(200).json({
+            "message": "Produto criado com sucesso!",
+            "product": product
+        })
     } catch (error) {
-
+        console.log(error)
+        if (error.name == "ValidationError") {
+            return res.status(422).json({ "message": "Validação mal sucedida, verifique os campos passados." })
+        }
+        return res.status(500).json({ "message": "Erro interno no servidor" })
     }
-
-
 })
 
 
