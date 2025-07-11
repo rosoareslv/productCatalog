@@ -7,7 +7,7 @@ const productSchema = new Schema({
   price: { type: Number, required: true },
   category: { type: String, required: true },
   ownerId: { type: mongoose.ObjectId, required: true },
-  lastUpdateDate: { type: Date, default: Date.now, required: true }
+  lastUpdateDate: { type: Date, default: Date.now }
 },);
 
 const Product = mongoose.model('Product', productSchema);
