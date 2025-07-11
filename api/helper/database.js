@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const User = require('../models/user')
 
 
 async function connect() {
@@ -12,4 +13,14 @@ async function connect() {
 
 }
 
-module.exports = { connect }
+async function getUserUUID(req, res, next) {
+    try {
+        let user_db = await User.findOne({ "username": req.requestorUsername })
+        req.requestorUUID = user_db._id
+        next()
+    } catch (error) {
+        return res.status(500).json({ "message": "Erro interno na verificação do usuário" })
+    }
+
+}
+module.exports = { connect, getUserUUID }

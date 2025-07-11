@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken")
 const fs = require("fs");
-const { decode } = require("punycode");
 
 const privateKey = fs.readFileSync("./keys/id_rsa").toString()
 
@@ -10,13 +9,22 @@ function createToken(username) {
 
 }
 
-function checkToken(token) {
+function checkToken(req, res, next) {
     try {
-        let decoded = jwt.verify(token, privateKey);
-        console.log(decoded)
+        let token = req.headers["authorization"]
+        if (!token) {
+            return res.status(500).json({ "message": "Token não fornecido" })
+        }
+        let obj = jwt.verify(token.replace("Bearer ", ""), privateKey)
+        req.requestorUsername = obj.username
+        next()
     } catch (error) {
-        console.log(error)
+        if (error.message == "invalid signature") {
+            return res.status(500).json({ "message": "Token inválido" })
+        }
+        return res.status(500).json({ "message": "Erro interno na verificação do token" })
     }
+
 }
 
 module.exports = { createToken, checkToken }

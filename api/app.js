@@ -2,13 +2,12 @@ const express = require('express');
 const swaggerUi = require('swagger-ui-express');
 const logger = require('morgan');
 const fs = require('fs')
-const db = require('./helper/database')
+const { connect, getUserUUID } = require('./helper/database')
 const { checkToken } = require("./helper/token")
 const { exec } = require('child_process');
 
 const app = express();
 
-//TODO: aprimorar log
 exec("ssh-keygen -t rsa -b 4096 -m PEM -f ./keys/id_rsa -N ''")
 
 const openapi = JSON.parse(fs.readFileSync("./docs/openapi.json"))
@@ -24,20 +23,17 @@ openapi.components.schemas = { ...productSchemas, ...authSchemas }
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapi));
 
-db.connect()
+//mongoDB connection
+connect()
 
 app.use(logger('dev'));
 app.use(express.json());
 
 app.use("/auth", require("./routes/auth"))
 
-app.use("/", (req, res, next) => {
-  checkToken()
-  //pegar token no header
-  //validar
-  //encaminhar para proximo endpoint
+app.use("/", checkToken, getUserUUID, (req, res, next) => {
+  console.log(req)
   next()
-
 })
 
 app.use("/product", require("./routes/product"))
