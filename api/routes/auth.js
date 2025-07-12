@@ -2,50 +2,50 @@ const express = require("express")
 const User = require("../models/user")
 const hash = require("../helper/hash")
 const token = require("../helper/token")
+const validator = require("../helper/validators")
 const router = express.Router()
 
-
-router.post('/register', async (req, res) => {
+router.post('/register', async (req, res, next) => {
     try {
-        let body = req.body
-        let user = new User(body)
-        user.password = await hash.generateHash(body.password)
-        await user.save()
-        return res.status(200).json({ "message": "Usuário criado com sucesso!" })
-    } catch (error) {
-        if (error.name == "ValidationError") {
-            return res.status(422).json({ "message": "Validação mal sucedida, verifique os campos passados." })
-        } else if (error.name == "MongoServerError") {
-            if (error.code == 11000) {
-                return res.status(422).json({ "message": "username já escolhido!" })
-            }
+        let registerValidation = validator.registerSchema.validate(req.body)
+        if(registerValidation.error != undefined) {
+            return res.status(400).json({ message: "Erro na validação", success: false, error: registerValidation.error.message }) 
         }
-        return res.status(500).json({ "message": "Erro interno no servidor" })
+        let username = await User.findOne({ username: req.body.username})
+        if (username != null) {
+            return res.status(403).json({ message: "Username indisponível", success: false, username: req.body.username }) 
+        }
+        req.body.password = await hash.generateHash(req.body.password)
+        await new User(req.body).save()
+        return res.status(200).json({ message: "Usuário criado com sucesso!", success: true, username: req.body.username })
+    } catch (error) {
+        next(error)
     }
 })
 
 
 //verificar se ja possui token ativo
-router.post('/login', async (req, res) => {
+router.post('/login', async (req, res, next) => {
     try {
-        let { username, password } = req.body
-        let user_db = await User.findOne({ "username": username })
-        let is_user = await hash.checkPassword(password, user_db.password)
-        if (!is_user) {
-            return res.status(401).json({ "message": "Não autorizado" })
+        let loginValidation = validator.loginSchema.validate(req.body)
+        if (loginValidation.error != undefined) {
+            return res.status(400).json({ message: "Erro na validação", success: false, error: loginValidation.error.message }) 
         }
-        let user_token = token.createToken({"username": username})
-        return res.status(200).json({ 
-            "message": "Usuário autenticado com sucesso",
-            "username" : username,
-            "token": user_token
+        let user_db = await User.findOne({ "username": req.body.username })
+        let is_user = await hash.checkPassword(req.body.password, user_db.password)
+        if (!is_user) {
+            return res.status(401).json({ message: "Não autorizado", success: false, })
+        }
+        let user_token = token.createToken(req.body.username)
+        return res.status(200).json({
+            message: "Usuário autenticado com sucesso",
+            username: req.body.username,
+            success: true,
+            token: user_token
         })
     } catch (error) {
-        console.log(error)
-        return res.status(500).json({ "message": "Erro interno no servidor" })
+        next(error)
     }
-
-
 })
 
 module.exports = router
