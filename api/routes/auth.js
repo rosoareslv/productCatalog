@@ -2,12 +2,12 @@ const express = require("express")
 const User = require("../models/user")
 const hash = require("../helper/hash")
 const token = require("../helper/token")
-const validator = require("../helper/validators")
+const { loginUser, registerUser } = require("../helper/validators")
 const router = express.Router()
 
 router.post('/register', async (req, res, next) => {
     try {
-        let registerValidation = validator.registerSchema.validate(req.body)
+        let registerValidation = registerUser.validate(req.body)
         if(registerValidation.error != undefined) {
             return res.status(400).json({ message: "Erro na validação", success: false, error: registerValidation.error.message }) 
         }
@@ -24,10 +24,9 @@ router.post('/register', async (req, res, next) => {
 })
 
 
-//verificar se ja possui token ativo
 router.post('/login', async (req, res, next) => {
     try {
-        let loginValidation = validator.loginSchema.validate(req.body)
+        let loginValidation = loginUser.validate(req.body)
         if (loginValidation.error != undefined) {
             return res.status(400).json({ message: "Erro na validação", success: false, error: loginValidation.error.message }) 
         }
