@@ -1,15 +1,17 @@
-const mongoose = require('mongoose');
-const { collection } = require('./user');
+const mongoose = require("mongoose");
+const { collection } = require("./user");
+const { required } = require("joi");
 const { Schema } = mongoose;
 
 const categorySchema = new Schema({
   title: String,
   description: String,
-  ownerId: mongoose.ObjectId
+  ownerId: mongoose.ObjectId,
+  modifiedAt: { type: Date, default: Date.now, required: true },
 });
 
-categorySchema.index({ title: 1, ownerId: 1 }, { unique: true })
+categorySchema.index({ title: 1, ownerId: 1 }, { unique: true });
 
-const Category = mongoose.model('Category', categorySchema);
+const Category = mongoose.model("Category", categorySchema);
 
-module.exports = Category
+module.exports = Category;
