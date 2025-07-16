@@ -32,7 +32,6 @@ router.get("/:id", async (req, res, next) => {
     }
     return res.status(200).json(category);
   } catch (error) {
-    //TODO gerar excecao para id invalido
     next(error);
   }
 });
@@ -50,7 +49,6 @@ router.delete("/:id", async (req, res, next) => {
     }
     return res.status(200).json(category);
   } catch (error) {
-    //TODO gerar excecao para id invalido
     next(error);
   }
 });
@@ -92,7 +90,6 @@ router.post("/", async (req, res, next) => {
     await category.save();
     return res.status(200).json(category);
   } catch (error) {
-    //TODO tratar erro de tentativa de cadastro de uma categoria igual por usuario
     next(error);
   }
 });
