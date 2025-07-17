@@ -1,5 +1,5 @@
 {
-  "/": {
+  "/category": {
     "post": {
       "summary": "Cria categoria na aplicação",
       "tags": ["Category"],
@@ -38,7 +38,7 @@
       }
     }
   },
-  "/{id}": {
+  "/category/{id}": {
     "get": {
       "summary": "Busca categoria na aplicação",
       "tags": ["Category"],

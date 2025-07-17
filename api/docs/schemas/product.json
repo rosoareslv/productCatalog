@@ -1,10 +1,19 @@
 {
-  "ProductRegisterSave": {
+  "ProductRegister": {
     "type": "object",
-    "properties": {},
+    "properties": {
+      "title": {
+        "type": "videogame",
+        "example": "Playstation6"
+      },
+      "description": {
+        "type": "string",
+        "example": "Videogames e acessorios"
+      }
+    },
     "required": []
   },
-  "ProductRegisterUpdate": {
+  "ProductUpdate": {
     "type": "object",
     "properties": {}
   }
