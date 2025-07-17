@@ -1,0 +1,30 @@
+{
+  "CategoryRegister": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "videogame",
+        "example": "Playstation6"
+      },
+      "description": {
+        "type": "string",
+        "example": "Videogames e acessorios"
+      }
+    },
+    "required": ["title", "description"]
+  },
+  "CategoryUpdate": {
+    "type": "object",
+    "properties": {
+      "title": {
+        "type": "string",
+        "example": "XBOX"
+      },
+      "description": {
+        "type": "string",
+        "example": "Consoles e acessorios desenvolvidos pela Microsoft, dona do XBOX"
+      }
+    },
+    "required": ["username", "password"]
+  }
+}

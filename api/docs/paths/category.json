@@ -1,0 +1,134 @@
+{
+  "/": {
+    "post": {
+      "summary": "Cria categoria na aplicação",
+      "tags": ["Category"],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CategoryRegister"
+            }
+          }
+        }
+      },
+      "responses": {
+        "400": {
+          "description": "Erro na validação dos campos"
+        },
+        "200": {
+          "description": "Categoria criado com sucesso"
+        },
+        "500": {
+          "description": "Erro interno ao criar categoria"
+        }
+      }
+    },
+    "get": {
+      "summary": "Lista todas as categorias cadastradas para o usuário",
+      "tags": ["Category"],
+      "responses": {
+        "200": {
+          "description": "Categorias retornadas com sucesso"
+        },
+        "500": {
+          "description": "Erro interno ao buscar categorias"
+        }
+      }
+    }
+  },
+  "/{id}": {
+    "get": {
+      "summary": "Busca categoria na aplicação",
+      "tags": ["Category"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Id da categoria"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Categoria retornada com sucesso"
+        },
+        "404": {
+          "description": "Categoria não identificada"
+        },
+        "500": {
+          "description": "Erro interno ao buscar categoria"
+        }
+      }
+    },
+    "delete": {
+      "summary": "Deleta categoria na aplicação",
+      "tags": ["Category"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Id da categoria"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Categoria deletada com sucesso"
+        },
+        "404": {
+          "description": "Categoria não identificada"
+        },
+        "500": {
+          "description": "Erro interno ao deletar categoria"
+        }
+      }
+    },
+    "patch": {
+      "summary": "Atualiza informações da Categoria",
+      "tags": ["Category"],
+      "parameters": [
+        {
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Id da categoria"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/CategoryUpdate"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Categoria atualizada com sucesso"
+        },
+        "400": {
+          "description": "Erro na validação dos campos"
+        },
+        "404": {
+          "description": "Categoria não identificada"
+        },
+        "500": {
+          "description": "Erro interno ao atualizar categoria"
+        }
+      }
+    }
+  }
+}
