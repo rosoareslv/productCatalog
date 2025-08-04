@@ -2,6 +2,8 @@ const express = require("express");
 const User = require("../models/user");
 const hash = require("../helper/hash");
 const token = require("../helper/token");
+const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const { loginUser, registerUser } = require("../helper/validators");
 const router = express.Router();
 
@@ -46,10 +48,39 @@ router.post("/login", async (req, res, next) => {
     if (!is_user) {
       return res.status(401).json({ message: "Não autorizado" });
     }
-    let user_token = token.createToken(req.body.username);
-    return res.status(200).json({
-      token: user_token,
+    let { accessToken, refreshToken } = token.createTokens(req.body.username);
+    req.redis.set(req.body.username, refreshToken);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 86400000,
     });
+    return res.status(200).json({
+      accessToken,
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/refresh", async (req, res, next) => {
+  try {
+    if (!req.cookies["refreshToken"]) {
+      return res.status(401).json({ message: "Não autorizado" });
+    }
+    let username = token.checkToken(req.cookies["refreshToken"]);
+    let latestRefreshToken = await req.redis.get(username)
+    if (latestRefreshToken != req.cookies["refreshToken"]) {
+      return res.status(401).json({ message: "Não autorizado" });
+    }    
+    let { accessToken, refreshToken } = token.createTokens(username);
+    req.redis.set(username, refreshToken);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 86400000,
+    });
+    return res.status(200).json({ accessToken });
   } catch (error) {
     next(error);
   }
