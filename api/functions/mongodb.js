@@ -15,14 +15,4 @@ async function connect() {
   }
 }
 
-async function getUserUUID(username) {
-  try {
-    let user_db = await User.findOne({ username: username });
-    return user_db._id;
-  } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Erro interno na verificação do usuário" });
-  }
-}
-module.exports = { connect, getUserUUID };
+module.exports = connect;
