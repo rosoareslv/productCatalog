@@ -14,7 +14,9 @@ services:
 
   api:
     container_name: api
-    image: node:23.8.0
+    build:
+      context: ./api
+      dockerfile: Dockerfile
     environment:
       - EXPRESS_PORT=2000
       - NODE_ENV=development
