@@ -10,7 +10,3 @@ db.createUser({
     }
   ]
 });
-
-db.createCollection('users');
-db.createCollection('products');
-db.createCollection('categories');
