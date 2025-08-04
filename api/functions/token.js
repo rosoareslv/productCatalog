@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
-const privateKey = fs.readFileSync("./keys/id_rsa").toString();
+const privateKey = fs.readFileSync("/keys/id_rsa").toString();
 
 function createTokens(username) {
   try {
