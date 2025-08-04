@@ -1,10 +1,8 @@
 const express = require("express");
 const User = require("../models/user");
-const hash = require("../helper/hash");
-const token = require("../helper/token");
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const { loginUser, registerUser } = require("../helper/validators");
+const hash = require("../functions/hash");
+const token = require("../functions/token");
+const { loginUser, registerUser } = require("../functions/validators");
 const router = express.Router();
 
 router.post("/register", async (req, res, next) => {

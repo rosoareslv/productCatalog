@@ -1,19 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const Category = require("../models/category");
-const { registerCategory, updateCategory } = require("../helper/validators");
+const { registerCategory, updateCategory } = require("../functions/validators");
 
 router.get("/", async (req, res, next) => {
   try {
-    let categories = await Category.find({ ownerId: req.requestorUUID });
+    let categories = await Category.find({ ownerId: req.userId });
     if (categories.length == 0) {
       return res.status(404).json({
         message: `Sem categorias cadastradas`,
       });
     }
-    return res
-      .status(200)
-      .json({ total: categories.length, categorias: categories });
+    return res.status(200).json({ categories });
   } catch (error) {
     next(error);
   }
@@ -23,7 +21,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     let category = await Category.findOne({
       _id: req.params["id"],
-      ownerId: req.requestorUUID,
+      ownerId: req.userId,
     });
     if (category == null) {
       return res.status(404).json({
@@ -40,7 +38,7 @@ router.delete("/:id", async (req, res, next) => {
   try {
     let category = await Category.findOneAndDelete({
       _id: req.params["id"],
-      ownerId: req.requestorUUID,
+      ownerId: req.userId,
     });
     if (category == null) {
       return res
@@ -63,7 +61,7 @@ router.patch("/:id", async (req, res, next) => {
     }
     req.body.modifiedAt = Date.now();
     let category = await Category.findOneAndUpdate(
-      { _id: req.params["id"], ownerId: req.requestorUUID },
+      { _id: req.params["id"], ownerId: req.userId },
       req.body,
       { returnDocument: "after", runValidators: true }
     );
@@ -85,7 +83,7 @@ router.post("/", async (req, res, next) => {
       return res.status(400).json({ error: categoryValidation.error.message });
     }
     let body = req.body;
-    body.ownerId = req.requestorUUID;
+    body.ownerId = req.userId;
     let category = new Category(body);
     await category.save();
     return res.status(200).json(category);

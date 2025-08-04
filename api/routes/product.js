@@ -1,21 +1,19 @@
 const express = require("express");
 const Product = require("../models/product");
 const Category = require("../models/category");
-const { updateProduct, registerProduct } = require("../helper/validators");
+const { updateProduct, registerProduct } = require("../functions/validators");
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   try {
-    let products = await Product.find({ ownerId: req.requestorUUID });
+    let products = await Product.find({ ownerId: req.userId });
     if (products.length == 0) {
       return res.status(404).json({
         message: `sem produtos cadastrados`,
       });
     }
-    return res
-      .status(200)
-      .json({ total: products.length, success: true, products: products });
+    return res.status(200).json({ products });
   } catch (error) {
     next(error);
   }
@@ -25,7 +23,7 @@ router.get("/:id", async (req, res, next) => {
   try {
     let product = await Product.findOne({
       _id: req.params["id"],
-      ownerId: req.requestorUUID,
+      ownerId: req.userId,
     });
     if (product == null) {
       return res.status(404).json({
@@ -42,7 +40,7 @@ router.delete("/:id", async (req, res) => {
   try {
     let product = await Product.findOneAndDelete({
       _id: req.params["id"],
-      ownerId: req.requestorUUID,
+      ownerId: req.userId,
     });
     if (product == null) {
       return res.status(404).json({
@@ -66,7 +64,7 @@ router.patch("/:id", async (req, res, next) => {
     if (req.body.category != undefined) {
       let category = await Category.findOne({
         title: req.body.category,
-        ownerId: req.requestorUUID,
+        ownerId: req.userId,
       });
       if (category == null) {
         return res.status(404).json({
@@ -76,7 +74,7 @@ router.patch("/:id", async (req, res, next) => {
     }
     req.body.modifiedAt = Date.now();
     let product = await Product.findOneAndUpdate(
-      { _id: req.params["id"], ownerId: req.requestorUUID },
+      { _id: req.params["id"], ownerId: req.userId },
       req.body,
       { returnDocument: "after", runValidators: true }
     );
@@ -102,7 +100,7 @@ router.post("/", async (req, res, next) => {
     if (req.body.category != undefined) {
       let category = await Category.findOne({
         title: req.body.category,
-        ownerId: req.requestorUUID,
+        ownerId: req.userId,
       });
       if (category == null) {
         return res.status(404).json({
@@ -111,7 +109,7 @@ router.post("/", async (req, res, next) => {
       }
     }
     let body = req.body;
-    body.ownerId = req.requestorUUID;
+    body.ownerId = req.userId;
     let product = new Product(body);
     await product.save();
     return res.status(200).json(product);
