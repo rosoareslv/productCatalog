@@ -9,9 +9,13 @@ function getTokenInfo(req, res, next) {
     req.username = checkToken(token);
     next();
   } catch (error) {
-    throw error;
+    if (error.name == "JsonWebTokenError") {
+      return res.status(401).json({ message: "Token inválido" });
+    } else if (error.name == "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expirado" });
+    }
+    next(error);
   }
 }
 
-module.exports = getTokenInfo
-
+module.exports = getTokenInfo;
