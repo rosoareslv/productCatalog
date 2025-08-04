@@ -3,35 +3,29 @@ const fs = require("fs");
 
 const privateKey = fs.readFileSync("./keys/id_rsa").toString();
 
-function createToken(username) {
-  return jwt.sign({ username: username }, privateKey, {
-    algorithm: "RS256",
-    expiresIn: "24h",
-  });
-}
-
-function checkToken(req, res, next) {
+function createTokens(username) {
   try {
-    let token = req.headers["authorization"];
-    if (!token) {
-      return res
-        .status(400)
-        .json({ message: "Token não fornecido"});
-    }
-    let obj = jwt.verify(token.replace("Bearer ", ""), privateKey);
-    req.requestorUsername = obj.username;
-    next();
+    let accessToken = jwt.sign({ username: username }, privateKey, {
+      algorithm: "RS256",
+      expiresIn: "10m",
+    });
+    let refreshToken = jwt.sign({ username: username }, privateKey, {
+      algorithm: "RS256",
+      expiresIn: "1d",
+    });
+    return { accessToken, refreshToken };
   } catch (error) {
-    if (error.name == "JsonWebTokenError") {
-      return res.status(401).json({ message: "Token inválido" });
-    }
-    if (error.name == "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expirado" });
-    }
-    return res
-      .status(500)
-      .json({ message: "Erro interno na verificação do token" });
+    throw error;
   }
 }
 
-module.exports = { createToken, checkToken };
+function checkToken(token) {
+  try {
+    let obj = jwt.verify(token.replace("Bearer ", ""), privateKey);
+    return obj.username;
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = { createTokens, checkToken };
