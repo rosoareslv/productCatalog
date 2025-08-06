@@ -5,11 +5,11 @@ const privateKey = fs.readFileSync("/keys/id_rsa").toString();
 
 function createTokens(username) {
   try {
-    let accessToken = jwt.sign({ username: username }, privateKey, {
+    let accessToken = jwt.sign({ username: username, rand: Math.random() }, privateKey, {
       algorithm: "RS256",
       expiresIn: "10m",
     });
-    let refreshToken = jwt.sign({ username: username }, privateKey, {
+    let refreshToken = jwt.sign({ username: username, rand: Math.random() }, privateKey, {
       algorithm: "RS256",
       expiresIn: "1d",
     });
