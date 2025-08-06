@@ -1,8 +1,6 @@
 const Product = require("../models/product");
 const Category = require("../models/category");
-const { updateProduct, registerProduct } = require("../functions/validators");
-
-const router = express.Router();
+const { updateProductValidator, registerProductValidator } = require("../functions/validators");
 
 async function getAllProducts(req, res, next) {
   try {
@@ -54,7 +52,7 @@ async function deleteProduct(req, res, next) {
 
 async function updateProduct(req, res, next) {
   try {
-    let productValidation = updateProduct.validate(req.body);
+    let productValidation = updateProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
       return res.status(400).json({
         error: productValidation.error.message,
@@ -90,7 +88,7 @@ async function updateProduct(req, res, next) {
 
 async function createProduct(req, res, next) {
   try {
-    let productValidation = registerProduct.validate(req.body);
+    let productValidation = registerProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
       return res.status(400).json({
         error: productValidation.error.message,

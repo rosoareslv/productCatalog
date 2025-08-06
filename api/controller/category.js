@@ -1,5 +1,5 @@
 const Category = require("../models/category");
-const { registerCategory, updateCategory } = require("../functions/validators");
+const { registerCategoryValidator, updateCategoryValidator } = require("../functions/validators");
 
 async function getAllCategories(req, res, next) {
   try {
@@ -51,7 +51,7 @@ async function deleteCategory(req, res, next) {
 
 async function updateCategory(req, res, next) {
   try {
-    let categoryValidation = updateCategory.validate(req.body);
+    let categoryValidation = updateCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
       return res.status(400).json({
         error: categoryValidation.error.message,
@@ -76,7 +76,7 @@ async function updateCategory(req, res, next) {
 
 async function createCategory(req, res, next) {
   try {
-    let categoryValidation = registerCategory.validate(req.body);
+    let categoryValidation = registerCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
       return res.status(400).json({ error: categoryValidation.error.message });
     }
