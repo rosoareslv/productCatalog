@@ -48,7 +48,7 @@ async function login(req, res, next) {
     req.redis.set(req.body.username, refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'prod',
       maxAge: 86400000,
     });
     return res.status(200).json({
@@ -73,7 +73,7 @@ async function refresh(req, res, next) {
     req.redis.set(username, refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'prod',
       maxAge: 86400000,
     });
     return res.status(200).json({ accessToken });
