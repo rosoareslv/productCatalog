@@ -3,7 +3,7 @@
   "info": {
     "title": "API de Catálogo de Produtos",
     "version": "1.0.0",
-    "description": "Documentação da API de Catálogo de Produtos"
+    "description": "Documentação da API de Catálogo de Produtos com suporte a cookies para autenticação"
   },
   "servers": [
     {
@@ -13,6 +13,25 @@
   ],
   "paths": {},
   "components": {
-    "schemas": {}
-  }
+    "schemas": {},
+    "securitySchemes": {
+      "cookieAuth": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "sessionId",
+        "description": "Cookie de sessão para autenticação"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Token JWT para autenticação"
+      }
+    }
+  },
+  "security": [
+    {
+      "cookieAuth": []
+    }
+  ]
 }
