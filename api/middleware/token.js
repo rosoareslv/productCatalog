@@ -2,7 +2,7 @@ const { checkToken } = require("../functions/token");
 
 function getTokenInfo(req, res, next) {
   try {
-    let token = req.headers["authorization"];
+    let token = req.headers["authorization"] || req.cookies["refreshToken"];
     if (!token) {
       return res.status(400).json({ message: "Token não fornecido" });
     }
@@ -17,5 +17,6 @@ function getTokenInfo(req, res, next) {
     next(error);
   }
 }
+//TODO ajeitar aqui para pegar token do cookie
 
 module.exports = getTokenInfo;
