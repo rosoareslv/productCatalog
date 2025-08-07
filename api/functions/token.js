@@ -1,18 +1,24 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 
-const privateKey = fs.readFileSync("/keys/id_rsa").toString();
-
 function createTokens(username) {
   try {
-    let accessToken = jwt.sign({ username: username, rand: Math.random() }, privateKey, {
-      algorithm: "RS256",
-      expiresIn: "10m",
-    });
-    let refreshToken = jwt.sign({ username: username, rand: Math.random() }, privateKey, {
-      algorithm: "RS256",
-      expiresIn: "1d",
-    });
+    let accessToken = jwt.sign(
+      { username: username, rand: Math.random() },
+      process.env.PRIVATE_KEY,
+      {
+        algorithm: "RS256",
+        expiresIn: "10m",
+      }
+    );
+    let refreshToken = jwt.sign(
+      { username: username, rand: Math.random() },
+      process.env.PRIVATE_KEY,
+      {
+        algorithm: "RS256",
+        expiresIn: "1d",
+      }
+    );
     return { accessToken, refreshToken };
   } catch (error) {
     throw error;
@@ -21,7 +27,7 @@ function createTokens(username) {
 
 function checkToken(token) {
   try {
-    let obj = jwt.verify(token.replace("Bearer ", ""), privateKey);
+    let obj = jwt.verify(token.replace("Bearer ", ""), process.env.PRIVATE_KEY);
     return obj.username;
   } catch (error) {
     throw error;
