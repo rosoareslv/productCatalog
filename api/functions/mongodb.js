@@ -10,9 +10,10 @@ async function connect() {
     await mongoose.connect(
       `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@database:27017/${process.env.MONGO_DATABASE}`
     );
+    console.log("MongoDB connected")
   } catch (error) {
     throw error;
   }
 }
 
-module.exports = connect;
+connect()
