@@ -1,34 +1,35 @@
-##### ProductCatalog API
+## ProductCatalog API
 
-This project of API was created firt to implement the best practices of building APIs, after handling a business logic Product and Categories for multiple clients, something which was created to feed a ecommerce, for example.
+This project of API was created firt to implement the best practices of building APIs, after handling a business logic Product and Categories for multiple clients, something which was created to feed an e-commerce, for example.
 
-### Stack
+#### Stack
 
-- Nodejs 
-    - ExpressJS 
-    - Mongoose 
+- Nodejs
+  - ExpressJS
+  - Mongoose
 - :whale: Docker
 - :four_leaf_clover: MongoDB
 - :red_circle: Redis
 
-### Security
+#### Security
 
 - JWT authentication
 - AccessToken + RefresToken
-- Whitelist controle of refreshTokens
+- Whitelist control of refreshTokens
 
-### Documentation
+#### Documentation
 
-### Development Deploy
+When app is running, go to */docs* endpoint.It follows the openapi specification
 
-``` bash 
+#### Development Deploy
+
+```bash
 docker compose -f docker-compose.dev.yaml up
 ```
 
-### Test Execution
+#### Test Execution
 
-
-``` bash 
+```bash
 #Run application
 docker compose -f docker-compose.test.yaml up -d
 
