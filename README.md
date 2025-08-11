@@ -30,9 +30,5 @@ docker compose -f docker-compose.dev.yaml up
 #### Test Execution
 
 ```bash
-#Run application
-docker compose -f docker-compose.test.yaml up -d
-
-#See Log from api container
-docker compose -f docker-compose.test.yaml logs api 
+docker compose -f docker-compose.test.yaml up
 ```
