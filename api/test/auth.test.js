@@ -8,7 +8,7 @@ let refreshToken;
 
 describe("Endpoints /auth", () => {
   describe("Teste na criação de usuário", () => {
-    //Only if the test is ran with a clear database volume for this scenario
+    //Only if the test is ran with a clear database volume for this scenario (tip: delete hidden mongoDB docker volumes)
     it("POST /auth/register - Criar usuário", async () => {
       const res = await agent
         .post("/auth/register")
@@ -74,10 +74,11 @@ describe("Endpoints /auth", () => {
     });
 
     it("GET /auth/refresh - Verificar se o refreshToken antigo foi revogado", async () => {
+      const agent = request.agent(app) //Needed a new agent object to set manually an old refreshToken
       const res = await agent.get("/auth/refresh").set("Cookie", `refreshToken=${refreshToken}`);
       expect(res.status).toEqual(401);
-      // expect(res.type).toEqual("application/json");
-      // expect(res.body).toEqual({ message: "Não autorizado" });
+      expect(res.type).toEqual("application/json");
+      expect(res.body).toEqual({ message: "Não autorizado" });
     });
   });
 });
