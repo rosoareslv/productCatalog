@@ -61,16 +61,13 @@ async function login(req, res, next) {
 
 async function refresh(req, res, next) {
   try {
-    if (!req.cookies["refreshToken"]) {
-      return res.status(401).json({ message: "Não autorizado" });
-    }
-    let username = token.checkToken(req.cookies["refreshToken"]);
-    let latestRefreshToken = await req.redis.get(username);
+    let latestRefreshToken = await req.redis.get(req.username);
     if (latestRefreshToken != req.cookies["refreshToken"]) {
       return res.status(401).json({ message: "Não autorizado" });
     }
-    let { accessToken, refreshToken } = token.createTokens(username);
-    req.redis.set(username, refreshToken);
+    let { accessToken, refreshToken } = token.createTokens(req.username);
+    req.redis.set(req.username, refreshToken);
+    //verificar propriedade sameSite para futuro proximo
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'prod',
