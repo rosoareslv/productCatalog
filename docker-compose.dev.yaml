@@ -37,7 +37,3 @@ services:
     image: redis:8.0
     ports:
       - 6379:6379
-
-
-## Run application
-#docker compose -f docker-compose.dev.yaml up
