@@ -1,6 +1,4 @@
 const mongoose = require("mongoose");
-const { collection } = require("./user");
-const { required } = require("joi");
 const { Schema } = mongoose;
 
 const categorySchema = new Schema({
