@@ -1,6 +1,6 @@
-const { createClient } = require("redis");
+import { createClient } from "redis";
 
-const redisClient = createClient({
+export const redisClient = createClient({
   url: "redis://whitelist:6379",
 });
 
@@ -20,8 +20,4 @@ async function connect() {
   }
 }
 
-connect();
-
-module.exports = {
-  redisClient,
-};
+connect()

@@ -1,6 +1,6 @@
-const { checkToken } = require("../functions/token");
+import { checkToken } from "../functions/token.js"
 
-function getTokenInfo(req, res, next) {
+export function getTokenInfo(req, res, next) {
   try {
     let token = req.headers["authorization"] || req.cookies["refreshToken"];
     if (!token) {
@@ -17,6 +17,3 @@ function getTokenInfo(req, res, next) {
     next(error);
   }
 }
-//TODO ajeitar aqui para pegar token do cookie
-
-module.exports = getTokenInfo;

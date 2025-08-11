@@ -1,6 +1,6 @@
-const User = require("../models/user");
+import User from "../models/user.js";
 
-async function getUserUUID(req, res, next) {
+export async function getUserUUID(req, res, next) {
   try {
     let user_db = await User.findOne({ username: req.username });
     req.userId = user_db._id;
@@ -11,5 +11,3 @@ async function getUserUUID(req, res, next) {
       .json({ message: "Erro interno na verificação do usuário" });
   }
 }
-
-module.exports = getUserUUID

@@ -1,6 +1,6 @@
-const jwt = require("jsonwebtoken");
+import jwt from 'jsonwebtoken'
 
-function createTokens(username) {
+export function createTokens(username) {
   try {
     let accessToken = jwt.sign(
       { username: username, rand: Math.random() },
@@ -24,7 +24,7 @@ function createTokens(username) {
   }
 }
 
-function checkToken(token) {
+export function checkToken(token) {
   try {
     let obj = jwt.verify(token.replace("Bearer ", ""), process.env.PRIVATE_KEY);
     return obj.username;
@@ -32,5 +32,3 @@ function checkToken(token) {
     throw error;
   }
 }
-
-module.exports = { createTokens, checkToken };

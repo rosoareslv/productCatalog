@@ -1,7 +1,6 @@
-const mongoose = require("mongoose");
-const { Schema } = mongoose;
+import mongoose from 'mongoose'
 
-const categorySchema = new Schema({
+const categorySchema = new mongoose.Schema({
   title: String,
   description: String,
   ownerId: mongoose.ObjectId,
@@ -12,4 +11,4 @@ categorySchema.index({ title: 1, ownerId: 1 }, { unique: true });
 
 const Category = mongoose.model("Category", categorySchema);
 
-module.exports = Category;
+export default Category

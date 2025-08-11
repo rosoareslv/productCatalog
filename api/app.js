@@ -1,28 +1,38 @@
-const express = require("express");
-const swaggerUi = require("swagger-ui-express");
-const logger = require("morgan");
-const cookieParser = require("cookie-parser");
-const openapi = require("./docs/setup");
+import express from "express";
+import swaggerUi from "swagger-ui-express";
+import logger from "morgan";
+import cookieParser from "cookie-parser";
+import openApi from "./docs/setup.js";
 
-require("./functions/ssh")
-require("./functions/mongodb")
+import { createSSHKeys } from "./functions/ssh.js";
+import { connect } from "./functions/mongodb.js";
+
+import { getConnection } from "./middleware/redis.js";
+import { getTokenInfo } from "./middleware/token.js";
+import { getUserUUID } from "./middleware/mongodb.js";
+
+import authRouter from "./routes/auth.js";
+import productRouter from "./routes/product.js";
+import categoryRouter from "./routes/category.js";
+
+await createSSHKeys();
+await connect();
 
 const app = express();
 app.use(cookieParser());
 
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(openapi));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApi));
 
 app.use(logger("dev"));
 app.use(express.json());
 
-app.use("/auth", require("./middleware/redis"), require("./routes/auth"));
+app.use("/auth", getConnection, authRouter);
+app.use("/product", getTokenInfo, getUserUUID, productRouter);
+app.use("/category", getTokenInfo, getUserUUID, categoryRouter);
 
-app.use("/product", require("./middleware/token"), require("./middleware/mongodb"), require("./routes/product"));
-app.use("/category", require("./middleware/token"), require("./middleware/mongodb"), require("./routes/category"));
-
-app.use("*", (req,res,next) => {
-    res.status(404).json("endpoint nao existente")
-})
+app.use("*", (req, res, next) => {
+  res.status(404).json("endpoint não existente");
+});
 
 app.use((err, req, res, next) => {
   console.log(err);
@@ -32,10 +42,10 @@ app.use((err, req, res, next) => {
   return res.status(500).json({ message: "Erro interno no servidor" });
 });
 
-port = process.env.EXPRESS_PORT || 2000;
+const port = process.env.EXPRESS_PORT || 2000;
 
 app.listen(port, () => {
   console.log(`ProductCatalog API running in ${port}`);
 });
 
-module.exports = app;
+export default app

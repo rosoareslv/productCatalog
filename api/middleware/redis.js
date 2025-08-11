@@ -1,12 +1,10 @@
-const { redisClient } = require("../functions/redis");
+import { redisClient } from "../functions/redis.js";
 
-function getConnection(req,res, next) {
-    try {
-        req.redis = redisClient;
-        next();
-    } catch (error) {
-        throw error       
-    }
+export function getConnection(req, res, next) {
+  try {
+    req.redis = redisClient;
+    next();
+  } catch (error) {
+    throw error;
+  }
 }
-
-module.exports = getConnection

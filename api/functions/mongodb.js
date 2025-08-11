@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from 'mongoose'
 
-async function connect() {
+export async function connect() {
   try {
     mongoose.connection.on("disconnected", () =>
       console.log("MongoDB disconnected")
@@ -14,5 +14,3 @@ async function connect() {
     throw error;
   }
 }
-
-connect()

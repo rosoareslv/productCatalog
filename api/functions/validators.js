@@ -1,45 +1,36 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const loginUser = Joi.object({
+export const loginUserValidator = Joi.object({
   username: Joi.string().alphanum().max(20).required(),
   password: Joi.string().alphanum().max(20).required(),
 });
 
-const registerUser = Joi.object({
+export const registerUserValidator = Joi.object({
   name: Joi.string().max(20).required(),
   username: Joi.string().alphanum().max(20).required(),
   password: Joi.string().alphanum().required(),
 });
 
-const registerProduct = Joi.object({
+export const registerProductValidator = Joi.object({
   title: Joi.string().max(20).required(),
   description: Joi.string().max(50).required(),
   price: Joi.number().min(0).required(),
   category: Joi.string().alphanum().max(20),
 });
 
-const updateProduct = Joi.object({
+export const updateProductValidator = Joi.object({
   title: Joi.string().max(20),
   description: Joi.string().max(50),
   price: Joi.number().min(0),
   category: Joi.string().max(20),
 });
 
-const registerCategory = Joi.object({
+export const registerCategoryValidator = Joi.object({
   title: Joi.string().alphanum().max(20).required(),
   description: Joi.string().max(50).required(),
 });
 
-const updateCategory = Joi.object({
+export const updateCategoryValidator = Joi.object({
   title: Joi.string().alphanum().max(20),
   description: Joi.string().max(50),
 });
-
-module.exports = {
-  loginUser,
-  registerUser,
-  registerProduct,
-  updateProduct,
-  registerCategory,
-  updateCategory,
-};

@@ -1,7 +1,7 @@
-const Category = require("../models/category");
-const { registerCategoryValidator, updateCategoryValidator } = require("../functions/validators");
+import Category from "../models/category.js";
+import { registerCategoryValidator, updateCategoryValidator } from "../functions/validators.js"
 
-async function getAllCategories(req, res, next) {
+export async function getAllCategories(req, res, next) {
   try {
     let categories = await Category.find({ ownerId: req.userId });
     if (categories.length == 0) {
@@ -15,7 +15,7 @@ async function getAllCategories(req, res, next) {
   }
 }
 
-async function getCategory(req, res, next) {
+export async function getCategory(req, res, next) {
   try {
     let category = await Category.findOne({
       _id: req.params["id"],
@@ -32,7 +32,7 @@ async function getCategory(req, res, next) {
   }
 }
 
-async function deleteCategory(req, res, next) {
+export async function deleteCategory(req, res, next) {
   try {
     let category = await Category.findOneAndDelete({
       _id: req.params["id"],
@@ -49,7 +49,7 @@ async function deleteCategory(req, res, next) {
   }
 }
 
-async function updateCategory(req, res, next) {
+export async function updateCategory(req, res, next) {
   try {
     let categoryValidation = updateCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
@@ -74,7 +74,7 @@ async function updateCategory(req, res, next) {
   }
 }
 
-async function createCategory(req, res, next) {
+export async function createCategory(req, res, next) {
   try {
     let categoryValidation = registerCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
@@ -89,11 +89,3 @@ async function createCategory(req, res, next) {
     next(error);
   }
 }
-
-module.exports = {
-  getAllCategories,
-  getCategory,
-  updateCategory,
-  createCategory,
-  deleteCategory,
-};

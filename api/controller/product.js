@@ -1,8 +1,11 @@
-const Product = require("../models/product");
-const Category = require("../models/category");
-const { updateProductValidator, registerProductValidator } = require("../functions/validators");
+import Product from "../models/product.js";
+import Category from "../models/category.js";
+import {
+  updateProductValidator,
+  registerProductValidator,
+} from "../functions/validators.js";
 
-async function getAllProducts(req, res, next) {
+export async function getAllProducts(req, res, next) {
   try {
     let products = await Product.find({ ownerId: req.userId });
     if (products.length == 0) {
@@ -16,7 +19,7 @@ async function getAllProducts(req, res, next) {
   }
 }
 
-async function getProduct(req, res, next) {
+export async function getProduct(req, res, next) {
   try {
     let product = await Product.findOne({
       _id: req.params["id"],
@@ -33,7 +36,7 @@ async function getProduct(req, res, next) {
   }
 }
 
-async function deleteProduct(req, res, next) {
+export async function deleteProduct(req, res, next) {
   try {
     let product = await Product.findOneAndDelete({
       _id: req.params["id"],
@@ -50,7 +53,7 @@ async function deleteProduct(req, res, next) {
   }
 }
 
-async function updateProduct(req, res, next) {
+export async function updateProduct(req, res, next) {
   try {
     let productValidation = updateProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
@@ -86,7 +89,7 @@ async function updateProduct(req, res, next) {
   }
 }
 
-async function createProduct(req, res, next) {
+export async function createProduct(req, res, next) {
   try {
     let productValidation = registerProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
@@ -113,12 +116,4 @@ async function createProduct(req, res, next) {
   } catch (error) {
     next(error);
   }
-}
-
-module.exports = {
-    getAllProducts,
-    getProduct,
-    updateProduct,
-    createProduct,
-    deleteProduct
 }
