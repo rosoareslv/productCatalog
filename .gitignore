@@ -120,4 +120,5 @@ dist
 package-lock.json
 
 #Folders
-/backup
+/backup_dev
+/keys
