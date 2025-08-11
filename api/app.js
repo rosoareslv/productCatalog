@@ -17,10 +17,12 @@ app.use(express.json());
 
 app.use("/auth", require("./middleware/redis"), require("./routes/auth"));
 
-app.use("/", require("./middleware/token"), require("./middleware/mongodb"));
+app.use("/product", require("./middleware/token"), require("./middleware/mongodb"), require("./routes/product"));
+app.use("/category", require("./middleware/token"), require("./middleware/mongodb"), require("./routes/category"));
 
-app.use("/product", require("./routes/product"));
-app.use("/category", require("./routes/category"));
+app.use("*", (req,res,next) => {
+    res.status(404).json("endpoint nao existente")
+})
 
 app.use((err, req, res, next) => {
   console.log(err);
