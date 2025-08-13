@@ -1,4 +1,5 @@
 services:
+
   database:
     container_name: database
     image: mongo:6.0
@@ -20,9 +21,11 @@ services:
       - MONGO_USER=master
       - MONGO_PASSWORD=123qwe
       - MONGO_DATABASE=catalogDB
+      - NODE_OPTIONS=$NODE_OPTIONS --experimental-vm-modules
     volumes:
       - ./api:/api:rw
       - ./keys/:/keys:rw
+
     ports:
       - 2000:2000
     working_dir: /api
