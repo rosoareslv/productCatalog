@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "dev": "nodemon app.js",
-    "test": "jest --coverage"
+    "test": "jest --config=./test/jest.config.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
