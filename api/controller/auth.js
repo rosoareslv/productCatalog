@@ -5,7 +5,7 @@ import { loginUserValidator, registerUserValidator } from "../functions/validato
 
 export async function create(req, res, next) {
   try {
-    let registerValidation = registerUser.validate(req.body);
+    let registerValidation = registerUserValidator.validate(req.body);
     if (registerValidation.error != undefined) {
       return res.status(400).json({
         error: registerValidation.error.message,
@@ -28,7 +28,7 @@ export async function create(req, res, next) {
 
 export async function login(req, res, next) {
   try {
-    let loginValidation = loginUser.validate(req.body);
+    let loginValidation = loginUserValidator.validate(req.body);
     if (loginValidation.error != undefined) {
       return res.status(400).json({
         error: loginValidation.error.message,
