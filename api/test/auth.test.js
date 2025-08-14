@@ -1,5 +1,5 @@
-const request = require("supertest");
-const app = require("../app");
+import request from "supertest";
+import app from "../app.js";
 
 const agent = request.agent(app); // the cookies are saved and redirected automatically
 
@@ -74,8 +74,10 @@ describe("Endpoints /auth", () => {
     });
 
     it("GET /auth/refresh - Verificar se o refreshToken antigo foi revogado", async () => {
-      const agent = request.agent(app) //Needed a new agent object to set manually an old refreshToken
-      const res = await agent.get("/auth/refresh").set("Cookie", `refreshToken=${refreshToken}`);
+      const agent = request.agent(app); //Needed a new agent object to set manually an old refreshToken
+      const res = await agent
+        .get("/auth/refresh")
+        .set("Cookie", `refreshToken=${refreshToken}`);
       expect(res.status).toEqual(401);
       expect(res.type).toEqual("application/json");
       expect(res.body).toEqual({ message: "Não autorizado" });
