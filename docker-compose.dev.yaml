@@ -4,7 +4,6 @@ services:
     container_name: reverse_proxy
     image: nginx:1.29
     volumes:
-      - ./web:/usr/share/nginx/html
       - ./default.config:/etc/nginx/conf.d/default.conf
     ports:
       - 81:81
@@ -24,7 +23,7 @@ services:
       - 27017:27017
     volumes:
       - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - ./backup_dev:/data/db:rw
+      - .dev_data:/data/db:rw
     networks:
       - database_network
 
@@ -60,4 +59,6 @@ networks:
     name: web_network
   database_network:
     name: database_network
-  
+
+volumes:
+  dev_data:
