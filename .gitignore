@@ -122,3 +122,5 @@ package-lock.json
 #Folders
 /backup_dev
 /keys
+/logs
+.dev_data

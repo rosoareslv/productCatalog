@@ -22,9 +22,12 @@ services:
       - MONGO_PASSWORD=123qwe
       - MONGO_DATABASE=catalogDB
       - NODE_OPTIONS=$NODE_OPTIONS --experimental-vm-modules
+      - NODE_ENV=test
     volumes:
       - ./api:/api:rw
+      - ./logs:/logs:rw
       - ./keys/:/keys:rw
+      - ./jest.config.js:/jest.config.js:ro
 
     ports:
       - 2000:2000

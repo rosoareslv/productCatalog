@@ -3,6 +3,7 @@ import swaggerUi from "swagger-ui-express";
 import logger from "morgan";
 import cookieParser from "cookie-parser";
 import openApi from "./docs/setup.js";
+import fs from "fs";
 
 import { createSSHKeys } from "./functions/ssh.js";
 import { connect } from "./functions/mongodb.js";
@@ -21,9 +22,24 @@ await connect();
 const app = express();
 app.use(cookieParser());
 
+if (process.env.NODE_ENV === "test") {
+  app.use(
+    logger("combined", {
+      stream: fs.createWriteStream("/logs/testLog.log", { flags: "a" }),
+    })
+  );
+} else if (process.env.NODE_ENV === "production") {
+  app.use(
+    logger("combined", {
+      stream: fs.createWriteStream("/logs/prodLog.log", { flags: "a" }),
+    })
+  );
+} else {
+  app.use(logger("dev"));
+}
+
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApi));
 
-app.use(logger("dev"));
 app.use(express.json());
 
 app.use("/auth", getConnection, authRouter);
@@ -44,8 +60,10 @@ app.use((err, req, res, next) => {
 
 const port = process.env.EXPRESS_PORT || 2000;
 
-app.listen(port, () => {
-  console.log(`ProductCatalog API running in ${port}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(port, () => {
+    console.log(`ProductCatalog API running in ${port}`);
+  });
+}
 
-export default app
+export default app;

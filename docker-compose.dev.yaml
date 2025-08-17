@@ -36,12 +36,14 @@ services:
       - MONGO_USER=master
       - MONGO_PASSWORD=123qwe
       - MONGO_DATABASE=catalogDB
+      - NODE_ENV=development
     networks:
       - web_network
       - database_network
     volumes:
       - ./api:/api:rw
-      - ./keys/:/keys:rw
+      - ./logs:/logs:rw
+      - ./keys:/keys:rw
     working_dir: /api
     command: bash -c "npm install && npm run dev"
     depends_on:
