@@ -6,7 +6,8 @@ import openApi from "./docs/setup.js";
 import fs from "fs";
 
 import { createSSHKeys } from "./functions/ssh.js";
-import { connect } from "./functions/mongodb.js";
+import { connectMongo } from "./functions/mongodb.js";
+import { connectRedis } from "./functions/redis.js"
 
 import { getConnection } from "./middleware/redis.js";
 import { getTokenInfo } from "./middleware/token.js";
@@ -17,7 +18,8 @@ import productRouter from "./routes/product.js";
 import categoryRouter from "./routes/category.js";
 
 await createSSHKeys();
-await connect();
+await connectMongo();
+await connectRedis();
 
 const app = express();
 app.use(cookieParser());

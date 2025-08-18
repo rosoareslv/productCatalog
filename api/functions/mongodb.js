@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-export async function connect() {
+export async function connectMongo() {
   try {
     mongoose.connection.on("disconnected", () =>
       console.log("MongoDB disconnected")
