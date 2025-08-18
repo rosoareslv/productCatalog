@@ -45,7 +45,7 @@ export async function login(req, res, next) {
       return res.status(401).json({ message: "Não autorizado" });
     }
     let { accessToken, refreshToken } = createTokens(req.body.username);
-    req.redis.set(req.body.username, refreshToken);
+    await req.redis.set(req.body.username, refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "prod",
