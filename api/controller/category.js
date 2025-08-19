@@ -80,6 +80,15 @@ export async function createCategory(req, res, next) {
     if (categoryValidation.error != undefined) {
       return res.status(400).json({ error: categoryValidation.error.message });
     }
+    let existentCategory = await Category.findOne({
+      title: req.body.title,
+      ownerId: req.userId,
+    });
+    if (existentCategory) {
+      return res.status(403).json({
+        message: `Categoria já cadastrada`,
+      });
+    }
     let body = req.body;
     body.ownerId = req.userId;
     let category = new Category(body);
