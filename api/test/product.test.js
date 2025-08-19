@@ -11,11 +11,11 @@ const header = {
   Authorization: "Bearer " + resToken.body.accessToken,
 };
 
-let product_id = null;
+let productId = null;
 
 const resCategory = await agent.post("/category").set(header).send({
-  title: "console",
-  description: "consoles e acessórios",
+  title: Math.random().toString(36).substring(2),
+  description: "teste automatizado"
 })
 
 let category = resCategory.body.title
@@ -36,11 +36,11 @@ describe("Endpoints /product", () => {
     expect(res.body).toHaveProperty("modifiedAt");
     expect(res.body).toHaveProperty("_id");
 
-    product_id = res.body._id;
+    productId = res.body._id;
   });
 
   it("PATCH /product/:id - Atualizar Produto adicionando Categoria que não existe", async () => {
-    const res = await agent.patch(`/product/${product_id}`).set(header).send({
+    const res = await agent.patch(`/product/${productId}`).set(header).send({
       category: "categoriaNaoExiste",
     });
     expect(res.status).toEqual(404);
@@ -48,7 +48,7 @@ describe("Endpoints /product", () => {
   });
 
   it("PATCH /product/:id - Atualizar Produto adicionando Categoria que existe", async () => {
-    const res = await agent.patch(`/product/${product_id}`).set(header).send({
+    const res = await agent.patch(`/product/${productId}`).set(header).send({
       category: category,
     });
     expect(res.status).toEqual(200);
@@ -63,7 +63,7 @@ describe("Endpoints /product", () => {
   });
 
   it("GET /product/:id - Buscar Produto", async () => {
-    const res = await agent.get(`/product/${product_id}`).set(header);
+    const res = await agent.get(`/product/${productId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("title");
@@ -83,7 +83,7 @@ describe("Endpoints /product", () => {
   });
 
   it("DELETE /product - Deletar produto", async () => {
-    const res = await agent.delete(`/product/${product_id}`).set(header);
+    const res = await agent.delete(`/product/${productId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("title");
