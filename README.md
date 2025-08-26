@@ -4,12 +4,14 @@ This project of API was created firt to implement the best practices of building
 
 #### Stack
 
-- Nodejs
-  - ExpressJS
-  - Mongoose
-- :whale: Docker
-- :four_leaf_clover: MongoDB
-- :red_circle: Redis
+- Nodejs - Runtime
+  - ExpressJS - Api framework
+  - Mongoose - MongoDB schemas and functions
+  - Jest - Tests
+- :snake: Python - Create fake data
+- :whale: Docker - Setup environments 
+- :four_leaf_clover: MongoDB - Database
+- :red_circle: Redis - Security
 
 #### Security
 
@@ -31,4 +33,12 @@ docker compose -f docker-compose.dev.yaml up
 
 ```bash
 docker compose -f docker-compose.test.yaml up
+```
+
+### Generate fake data
+
+Run a script to create fake data for performance and development contexts inside 'mock' folder
+
+```bash
+python script.py
 ```
