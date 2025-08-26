@@ -58,11 +58,11 @@ def login_user(**kwargs):
 def random_category(**kwargs):
     try:
         token, category = kwargs["data"]
-        res= requests.post(
+        res = requests.post(
             "http://localhost:81/category",
             headers={"Authorization": "Bearer " + token},
             json={"title": category, "description": category + " description"},
-            timeout=10
+            timeout=10,
         )
         if str(res.status_code).startswith("2"):
             add_token_category(token, category)
@@ -74,29 +74,33 @@ def random_category(**kwargs):
 def random_product(**kwargs):
     try:
         product_name = product_names[random.randint(0, len(product_names) - 1)]
-        http_request(
-            "POST",
-            "/product",
-            payload={
+        token = TOKENS[random.randint(0, len(TOKENS) - 1)]
+        categories_per_user = TOKEN_CATEGORIES[token]
+        res = requests.post(
+            "http://localhost:81/product",
+            headers={"Authorization": "Bearer " + token},
+            json={
                 "title": product_name,
                 "description": product_name + " description",
                 "price": random.randint(1, 10000),
                 "category": (
-                    product_categories[random.randint(0, len(product_categories) - 1)]
-                    if random.randint(0, 1) == 1
-                    else None
+                    categories_per_user[random.randint(0, len(categories_per_user) - 1)]
                 ),
             },
+            timeout=10,
         )
-        return "OK"
-    except:
-        return "NOK"
+        if not str(res.status_code).startswith("2"):
+            print(res.json())
+    except Exception as e:
+        print(e)
+
 
 def add_token_category(token, category):
     with LOCK:
         if TOKEN_CATEGORIES.get(token) is None:
             TOKEN_CATEGORIES[token] = []
         TOKEN_CATEGORIES[token].append(category)
+
 
 def generate_password():
     characters = list(string.ascii_lowercase) + list(string.ascii_uppercase)
@@ -177,8 +181,14 @@ if __name__ == "__main__":
     # Para cada token, todas as categorias serão registradas, para dar maior flexibilidade a criação dos produtos
     runner(
         random_category,
-        [(token, category) for token in TOKENS for category in CATEGORIES],
+        [
+            (token, category)
+            for token in TOKENS
+            for category in CATEGORIES[: args.category]
+        ],
     )
-    #TODO implementar runner para produtos, com o objeto TOKEN_CATEGORIES
-    # runner(random_product, args.product)
+    # Os produtos são criados aleatoriamente (em quantidade e definição) nos users cadastrados
+    runner(random_product, range(0, args.product))
     end = time.time()
+    print(f"Tokens available to test endpoints:\n{"\n".join(TOKENS)}")
+    print(f"Elapsed time: {(end - start) / 60} min")
