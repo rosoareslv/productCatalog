@@ -1,96 +1,102 @@
 import threading
-from fake_data import product_names, names, product_categories
+from fake_data import product_names, NAMES, CATEGORIES
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime
-import http.client
+import requests
 import random
-
-# from tqdm import tqdm
 import argparse
 import string
-import json
+import queue
 import time
 
 
-env = {
-    "ip": "localhost",
-    "port": 81,
-    "routes": {
-        "auth": {"login": "/login", "register": "/register", "refresh": "/refresh"},
-        "product": "/product",
-        "category": "/category",
-    },
-}
+LOCK = threading.Lock()
+USERS = queue.Queue()
+TOKENS = []
+
+TOKEN_CATEGORIES = {}
 
 
-def http_request(
-    method: str,
-    ip: str,
-    port: int,
-    url: str,
-    headers={},
-    payload: dict = None,
-    data_response: bool = False,
-    raise_exception: bool = True,
-):
-    conn = http.client.HTTPConnection(ip, port, timeout=60)
-    conn.request(
-        method,
-        url,
-        headers=headers,
-        body=json.dumps(payload) if payload != None else None,
-    )
-    response = conn.getresponse()
-    data = response.read().decode("utf-8")
-    if str(response.status).startswith("2"):
-        if data_response:
-            return json.loads(data)
-        return True
-    if raise_exception:
-        raise Exception(f"Erro na operacao")
-    elif data_response:
-        return json.loads(data)
-    else:
-        return False
-
-
-def random_user():
-    name = names[random.randint(0, len(names) - 1)]
-    return {"name": name, "username": name.replace(" ", "_").lower()}
-
-
-def random_product():
-    return {
-        "title": product_names[random.randint(0, len(product_names) - 1)],
-        "description": product_names[random.randint(0, len(product_names) - 1)]
-        + " description",
-        "price": random.randint(1, 10000),
-        "category": (
-            product_categories[random.randint(0, len(product_categories) - 1)]
-            if random.randint(0, 1) == 1
-            else None
-        ),
-    }
-
-
-def random_category(count):
-    index = random.randint(0, len(product_categories) - 1)
-    category = product_categories[index]
-    return {"title": category, "description": category + " description"}
-
-
-def engine(**kwargs):
+# Faz o registro de clientes multithread baseados nos nomes (NAMES) disponíveis, populando a queue USERS para o login
+def random_user(**kwargs):
     try:
+        name = NAMES.get()
+        username = name.replace(" ", "").lower()
+        password = generate_password()
+        res = requests.post(
+            "http://localhost:81/auth/register",
+            json={
+                "name": name,
+                "username": username,
+                "password": password,
+            },
+            timeout=10,
+        )
+        if str(res.status_code).startswith("2"):
+            USERS.put({"username": username, "password": password})
+        NAMES.task_done()
+    except Exception as e:
+        print(e)
+
+
+# Faz o login multithread, fazendo o dequeue de USERS E populando a list compartilhada TOKENS
+def login_user(**kwargs):
+    while True:
+        try:
+            user = USERS.get(block=False)
+            res = requests.post("http://localhost:81/auth/login", json=user, timeout=10)
+            if str(res.status_code).startswith("2"):
+                with LOCK:
+                    TOKENS.append(res.json()["accessToken"])
+            USERS.task_done()
+        except queue.Empty as qe:
+            break
+        except Exception as e:
+            print(e)
+
+
+# Para cada categoria, eu crio para todos os TOKENS registrados anteriormente e salvo individualmente para garantir que o usuario x, tem as categorias y
+def random_category(**kwargs):
+    try:
+        token, category = kwargs["data"]
+        res= requests.post(
+            "http://localhost:81/category",
+            headers={"Authorization": "Bearer " + token},
+            json={"title": category, "description": category + " description"},
+            timeout=10
+        )
+        if str(res.status_code).startswith("2"):
+            add_token_category(token, category)
+        print(res.json())
+    except Exception as e:
+        print(e)
+
+
+def random_product(**kwargs):
+    try:
+        product_name = product_names[random.randint(0, len(product_names) - 1)]
         http_request(
             "POST",
-            env["ip"],
-            env["port"],
-            kwargs["endpoint"],
-            payload=kwargs["generator"],
+            "/product",
+            payload={
+                "title": product_name,
+                "description": product_name + " description",
+                "price": random.randint(1, 10000),
+                "category": (
+                    product_categories[random.randint(0, len(product_categories) - 1)]
+                    if random.randint(0, 1) == 1
+                    else None
+                ),
+            },
         )
-    except Exception as e:
-        print(str(e))
+        return "OK"
+    except:
+        return "NOK"
 
+def add_token_category(token, category):
+    with LOCK:
+        if TOKEN_CATEGORIES.get(token) is None:
+            TOKEN_CATEGORIES[token] = []
+        TOKEN_CATEGORIES[token].append(category)
 
 def generate_password():
     characters = list(string.ascii_lowercase) + list(string.ascii_uppercase)
@@ -99,34 +105,29 @@ def generate_password():
         for _ in range(0, len(characters))
     ]
     password = "".join(mixed)
-    return password
+    return password[:10]
 
 
-def get_current_datetime():
-    return str(
-        datetime.now(tz=datetime.now().astimezone().tzinfo).isoformat(
-            timespec="milliseconds"
-        )
-    )
-
-
-def write_log(message: str, filename: str):
-    with open(f"{filename}.txt", "a", encoding="utf-8") as log:
-        log.write(message + "\n")
-
-
-def runner(fn, count, endpoint):
+def runner(fn, counter=None):
     threads = []
     with ThreadPoolExecutor(max_workers=args.thread) as executor:
-        for _ in range(0, count):
-            threads.append(executor.submit(runner), endpoint=endpoint, generator=fn)
+        iterator = counter if counter is not None else range(0, args.thread)
+        for item in iterator:
+            threads.append(executor.submit(fn, data=item))
     [task for task in as_completed(threads)]
 
 
 def int_max_20(value):
     ivalue = int(value)
-    if ivalue > 100:
+    if ivalue > 20:
         raise argparse.ArgumentTypeError(f"Maximum value is 20")
+    return ivalue
+
+
+def int_max_100(value):
+    ivalue = int(value)
+    if ivalue > 100:
+        raise argparse.ArgumentTypeError(f"Maximum value is 100")
     return ivalue
 
 
@@ -147,16 +148,16 @@ if __name__ == "__main__":
         "--users",
         help="How many users will be created",
         dest="user",
-        type=int,
+        type=int_max_100,
         action="store",
-        default=100,
+        default=5,
     )
     parser.add_argument(
         "-p",
         "--products",
         help="How many products will be created",
         dest="product",
-        type=int_max_20,
+        type=int,
         action="store",
         default=1000,
     )
@@ -165,12 +166,19 @@ if __name__ == "__main__":
         "--category",
         help="How many categories will be created, with max of 20",
         dest="category",
-        type=int,
+        type=int_max_20,
         action="store",
         default=10,
     )
     args = parser.parse_args()
     lock = threading.Lock()
-    runner(random_category, args.category, env["routes"]["category"])
-    runner(random_product, args.product, env["routes"]["product"])
+    runner(random_user, range(0, args.user))
+    runner(login_user)
+    # Para cada token, todas as categorias serão registradas, para dar maior flexibilidade a criação dos produtos
+    runner(
+        random_category,
+        [(token, category) for token in TOKENS for category in CATEGORIES],
+    )
+    #TODO implementar runner para produtos, com o objeto TOKEN_CATEGORIES
+    # runner(random_product, args.product)
     end = time.time()

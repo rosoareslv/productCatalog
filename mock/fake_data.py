@@ -1,4 +1,7 @@
-names = [
+import queue
+
+
+_names = [
     "Ana Clara",
     "Bruno Martins",
     "Carla Souza",
@@ -199,25 +202,30 @@ product_names = [
     "Placa Controladora PCI FastConnect",
 ]
 
-product_categories = [
+CATEGORIES = [
     "Smartphones",
     "Notebooks",
     "Tablets",
     "Smartwatches",
-    "Fones de Ouvido",
-    "Câmeras e Filmadoras",
-    "Teclados e Mouses",
+    "FonesdeOuvido",
+    "CameraseFilmadoras",
+    "TecladoseMouses",
     "Monitores",
     "Drones",
-    "Consoles e Jogos",
-    "Acessórios para Carregamento",
-    "Áudio e Caixas de Som",
-    "Componentes de PC",
-    "Impressoras e Scanners",
-    "Redes e Roteadores",
-    "Acessórios para Computador",
+    "ConsoleseJogos",
+    "AcessoriosparaCarre",
+    "AudioeCaixasdeSom",
+    "ComponentesdePC",
+    "ImpressoraseScanner",
+    "RedeseRoteadores",
+    "AcessoriosparaComput",
     "Projetores",
-    "Dispositivos de Armazenamento",
-    "Realidade Virtual",
-    "Automação Residencial",
+    "DispositivosdeArmaze",
+    "RealidadeVirtual",
+    "AutomacaoResidencial",
 ]
+
+NAMES = queue.Queue()
+
+for name in _names:
+    NAMES.put(name)
