@@ -32,7 +32,11 @@ docker compose -f docker-compose.dev.yaml up
 #### Test Execution
 
 ```bash
-docker compose -f docker-compose.test.yaml up
+
+docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --exit-code-from api | grep api && \ 
+docker-compose -f docker-compose.test.yaml down --volumes --remove-orphans
+
+
 ```
 
 #### Generate fake data
