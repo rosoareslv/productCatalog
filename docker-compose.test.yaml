@@ -10,7 +10,7 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - ./configs/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
 
   api:
     container_name: api
@@ -27,7 +27,7 @@ services:
       - ./api:/api:rw
       - ./logs:/logs:rw
       - ./keys/:/keys:rw
-      - ./jest.config.js:/jest.config.js:ro
+      - ./configs/jest.config.js:/jest.config.js:ro
 
     ports:
       - 2000:2000
