@@ -134,7 +134,6 @@ def int_max_100(value):
         raise argparse.ArgumentTypeError(f"Maximum value is 100")
     return ivalue
 
-
 if __name__ == "__main__":
     start = time.time()
     parser = argparse.ArgumentParser(description="Script")
@@ -143,7 +142,7 @@ if __name__ == "__main__":
         "--threads",
         help="How many threads will be invoked",
         dest="thread",
-        type=int,
+        type=int_max_20,
         action="store",
         default=20,
     )
@@ -167,7 +166,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "-c",
-        "--category",
+        "--categories",
         help="How many categories will be created, with max of 20",
         dest="category",
         type=int_max_20,
@@ -184,7 +183,7 @@ if __name__ == "__main__":
         [
             (token, category)
             for token in TOKENS
-            for category in CATEGORIES[: args.category]
+            for category in CATEGORIES[:args.category]
         ],
     )
     # Os produtos são criados aleatoriamente (em quantidade e definição) nos users cadastrados
