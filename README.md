@@ -53,3 +53,18 @@ You can set the amount of entity you want to generate by:
 ```bash
 python script.py -t 10 -u 30 -p 10000 -c 15
 ```
+
+#### To implement:
+
+- IA in mock code to generate data mock
+- CI/CD
+
+#### Key improvements:
+
+- Validations Can Be More Rigorous (may add email field and validation)
+- Input sanitization (express-validator)
+- Rate limiting
+- Performance metrics
+- Structured logs
+- Healthcheck
+- Set resoruces usage (CPU, RAM...) in compose files
