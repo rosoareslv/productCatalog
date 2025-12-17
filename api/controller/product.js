@@ -76,7 +76,7 @@ export async function updateProduct(req, res, next) {
     let product = await Product.findOneAndUpdate(
       { _id: req.params["id"], ownerId: req.userId },
       req.body,
-      { returnDocument: "after", runValidators: true }
+      { returnDocument: "after", runValidators: true },
     );
     if (product == null) {
       return res.status(404).json({

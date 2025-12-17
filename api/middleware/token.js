@@ -1,4 +1,4 @@
-import { checkToken } from "../functions/token.js"
+import { checkToken } from "../functions/token.js";
 
 export function getTokenInfo(req, res, next) {
   try {

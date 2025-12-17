@@ -1,5 +1,8 @@
 import Category from "../models/category.js";
-import { registerCategoryValidator, updateCategoryValidator } from "../functions/validators.js"
+import {
+  registerCategoryValidator,
+  updateCategoryValidator,
+} from "../functions/validators.js";
 
 export async function getAllCategories(req, res, next) {
   try {
@@ -61,7 +64,7 @@ export async function updateCategory(req, res, next) {
     let category = await Category.findOneAndUpdate(
       { _id: req.params["id"], ownerId: req.userId },
       req.body,
-      { returnDocument: "after", runValidators: true }
+      { returnDocument: "after", runValidators: true },
     );
     if (category == null) {
       return res.status(404).json({

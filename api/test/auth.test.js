@@ -69,7 +69,7 @@ describe("Endpoints /auth", () => {
       expect(res.headers["set-cookie"][0]).toContain("refreshToken=");
       expect(res.body.accessToken).not.toEqual(accessToken);
       expect(
-        res.headers["set-cookie"][0].split(";")[0].split("=")[1]
+        res.headers["set-cookie"][0].split(";")[0].split("=")[1],
       ).not.toEqual(refreshToken);
     });
 

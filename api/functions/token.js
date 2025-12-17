@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken'
+import jwt from "jsonwebtoken";
 
 export function createTokens(username) {
   try {
@@ -8,7 +8,7 @@ export function createTokens(username) {
       {
         algorithm: "RS256",
         expiresIn: "10m",
-      }
+      },
     );
     let refreshToken = jwt.sign(
       { username: username, rand: Math.random() },
@@ -16,7 +16,7 @@ export function createTokens(username) {
       {
         algorithm: "RS256",
         expiresIn: "1d",
-      }
+      },
     );
     return { accessToken, refreshToken };
   } catch (error) {

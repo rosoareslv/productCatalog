@@ -1,7 +1,10 @@
 import User from "../models/user.js";
 import { generateHash, checkPassword } from "../functions/hash.js";
 import { createTokens } from "../functions/token.js";
-import { loginUserValidator, registerUserValidator } from "../functions/validators.js";
+import {
+  loginUserValidator,
+  registerUserValidator,
+} from "../functions/validators.js";
 
 export async function create(req, res, next) {
   try {

@@ -13,12 +13,15 @@ const header = {
 
 let productId = null;
 
-const resCategory = await agent.post("/category").set(header).send({
-  title: Math.random().toString(36).substring(2),
-  description: "teste automatizado"
-})
+const resCategory = await agent
+  .post("/category")
+  .set(header)
+  .send({
+    title: Math.random().toString(36).substring(2),
+    description: "teste automatizado",
+  });
 
-let category = resCategory.body.title
+let category = resCategory.body.title;
 
 describe("Endpoints /product", () => {
   it("POST /product - Criar Produto", async () => {
@@ -56,7 +59,7 @@ describe("Endpoints /product", () => {
     expect(res.body).toHaveProperty("title");
     expect(res.body).toHaveProperty("description");
     expect(res.body).toHaveProperty("category");
-    expect(res.body.category).toEqual(category)
+    expect(res.body.category).toEqual(category);
     expect(res.body).toHaveProperty("ownerId");
     expect(res.body).toHaveProperty("modifiedAt");
     expect(res.body).toHaveProperty("_id");

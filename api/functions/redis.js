@@ -1,6 +1,6 @@
 import { createClient } from "redis";
 
-let redisClient = null
+let redisClient = null;
 
 export async function connectRedis() {
   try {
@@ -14,7 +14,7 @@ export async function connectRedis() {
 
     redisClient.on("end", () => {
       console.log("Redis disconnected");
-    })
+    });
     await redisClient.connect();
   } catch (error) {
     throw error;
@@ -22,5 +22,5 @@ export async function connectRedis() {
 }
 
 export function getRedisClient() {
-  return redisClient
+  return redisClient;
 }

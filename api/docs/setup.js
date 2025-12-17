@@ -1,13 +1,11 @@
-import { readFileSync } from 'fs';
+import { readFileSync } from "fs";
 
 const openapi = JSON.parse(readFileSync("./docs/openapi.json"));
 
-const productSchemas = JSON.parse(
-  readFileSync("./docs/schemas/product.json")
-);
+const productSchemas = JSON.parse(readFileSync("./docs/schemas/product.json"));
 const authSchemas = JSON.parse(readFileSync("./docs/schemas/auth.json"));
 const categorySchemas = JSON.parse(
-  readFileSync("./docs/schemas/category.json")
+  readFileSync("./docs/schemas/category.json"),
 );
 
 const authPaths = JSON.parse(readFileSync("./docs/paths/auth.json"));
@@ -21,4 +19,4 @@ openapi.components.schemas = {
   ...categorySchemas,
 };
 
-export default openapi
+export default openapi;

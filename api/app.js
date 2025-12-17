@@ -7,7 +7,7 @@ import fs from "fs";
 
 import { createSSHKeys } from "./functions/ssh.js";
 import { connectMongo } from "./functions/mongodb.js";
-import { connectRedis } from "./functions/redis.js"
+import { connectRedis } from "./functions/redis.js";
 
 import { getConnection } from "./middleware/redis.js";
 import { getTokenInfo } from "./middleware/token.js";
@@ -28,13 +28,13 @@ if (process.env.NODE_ENV === "test") {
   app.use(
     logger("combined", {
       stream: fs.createWriteStream("/logs/testLog.log", { flags: "a" }),
-    })
+    }),
   );
 } else if (process.env.NODE_ENV === "production") {
   app.use(
     logger("combined", {
       stream: fs.createWriteStream("/logs/prodLog.log", { flags: "a" }),
-    })
+    }),
   );
 } else {
   app.use(logger("dev"));
