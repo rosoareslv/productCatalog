@@ -68,3 +68,7 @@ python script.py -t 10 -u 30 -p 10000 -c 15
 - Structured logs
 - Healthcheck
 - Set resoruces usage (CPU, RAM...) in compose files
+
+##### This project was based on this challenge
+
+https://github.com/githubanotaai/new-test-backend-nodejs
