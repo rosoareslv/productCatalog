@@ -9,7 +9,7 @@ This project of API was created firt to implement the best practices of building
   - Mongoose - MongoDB schemas and functions
   - Jest - Tests
 - :snake: Python - Create fake data
-- :whale: Docker - Setup environments 
+- :whale: Docker - Setup environments
 - :four_leaf_clover: MongoDB - Database
 - :red_circle: Redis - Security
 
@@ -21,22 +21,18 @@ This project of API was created firt to implement the best practices of building
 
 #### Documentation
 
-When app is running, go to */docs* endpoint.It follows the openapi specification
+When app is running, go to _/docs_ endpoint.It follows the openapi specification
 
 #### Development Deploy
 
 ```bash
-docker compose -f docker-compose.dev.yaml up
+docker compose -f docker-compose.yaml up api
 ```
 
 #### Test Execution
 
 ```bash
-
-docker-compose -f docker-compose.test.yaml up --abort-on-container-exit --exit-code-from api | grep api && \ 
-docker-compose -f docker-compose.test.yaml down --volumes --remove-orphans
-
-
+docker-compose -f docker-compose.yaml up test
 ```
 
 #### Generate fake data
@@ -68,6 +64,7 @@ python script.py -t 10 -u 30 -p 10000 -c 15
 - Structured logs
 - Healthcheck
 - Set resoruces usage (CPU, RAM...) in compose files
+- Two factor authentication
 
 ##### This project was based on this challenge
 
