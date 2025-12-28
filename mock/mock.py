@@ -2,17 +2,15 @@
 
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
-from bs4 import BeautifulSoup
 from datetime import datetime
+from faker import Faker
 from tqdm import tqdm
 import argparse
 import requests
 import json
 import time
 
-#Usar inteligencia artificial aqui para gerar os dados
-                                       
+
 MAX_THREADS = 20
 TIMEOUT_SECONDS = 20
 
@@ -22,18 +20,16 @@ adapter = HTTPAdapter(pool_connections=10, pool_maxsize=10, max_retries=3)
 session.mount("http://", adapter)
 session.mount("https://", adapter)
 
+
 def http_request(
     method: str,
     ip: str,
     port: int,
     url: str,
-    opr: str,
-    calls: list,
     https: bool = False,
     headers: dict = None,
     payload: dict = None,
     data_response: bool = False,
-    raise_exception: bool = True,
 ):
     scheme = "https" if https else "http"
     full_url = f"{scheme}://{ip}:{port}{url}"
@@ -46,29 +42,35 @@ def http_request(
         verify=False,
     )
     data = response.text
-    calls.append(
-        f"INFO: {get_current_datetime()} | {url} | {method} | HTTP {response.status_code}\n"
-        f"{json.dumps(payload,indent=4) if payload else 'Sem payload'}"
-        f"\n{data if not str(response.status_code).startswith('2') else 'Sucesso na operacao'}",
-    )
     if response.ok:
         return response.json() if data_response else True
-    elif raise_exception:
+    else:
         raise Exception(
-            f"Error: {opr} | code: {response.status_code} | mensage: {data}"
-        )
     return response.json() if data_response else False
 
 
-def create_products():
+def create_product():
     pass
 
-def create_users():
-    pass
 
-def create_categories():
-    pass
-    
+def create_user():
+    return http_request(
+        method="POST",
+        ip="localhost",
+        port=2000,
+        url="/auth/register",
+        calls=[],
+        payload={
+            "name":
+            "username":
+            "password"
+        }
+    )
+
+
+def create_category():
+    return "OK"
+
 
 def get_current_datetime():
     return str(
@@ -84,7 +86,7 @@ def write_log(message: str, filename: str):
 
 
 def run_threads(executor, quantity, engine, pbar):
-    futures = [
+    futures=[
         executor.submit(
             engine
         )
@@ -92,30 +94,36 @@ def run_threads(executor, quantity, engine, pbar):
     ]
     [pbar.update(1) for _ in as_completed(futures)]
 
-def create_entities(users, products, categories, executor, pbar):
-    run_threads(executor, users, create_users, pbar)
-    run_threads(executor, products, create_products, pbar)
-    run_threads(executor, categories, create_categories, pbar)
+
+# Criar os users
+# Salvar todoos os users criados
+# Randomizar categorias baseado na quantidade
+# Criar todas as categorias para todos os usuários
+# depois os produtos (randomiza a vontade)
+
+
+def loop_entities(total, create_entity, executor, pbar):
+    counter=0
+    for _ in range(0, total):
+        counter += 1
+        if counter >= 10000:
+            run_threads(executor, counter, create_entity, pbar)
+            counter=0
+    run_threads(executor, counter, create_entity, pbar)
+
 
 def runner():
     with ThreadPoolExecutor(max_workers=MAX_THREADS) as executor:
-        counter = 0
-        total_requests = args.user + args.product + args.category
+        total_requests=args.user + args.product + args.category
         with tqdm(total=total_requests, desc="entities", unit="entity") as pbar:
-            for _ in range(0, total_requests):
-                counter += 1
-                if counter >= 10000:
-                    create_entities(args.user, args.product, args.category, executor, pbar)
-                    args.user -= counter
-                    args.product -= counter
-                    args.category -= counter
-                    counter = 0
-            create_entities(args.user, args.product, args.category, executor, pbar)
+            loop_entities(args.user, create_user, executor, pbar)
+            loop_entities(args.category, create_category, executor, pbar)
+            loop_entities(args.product, create_product, executor, pbar)
 
 
 if __name__ == "__main__":
-    start_time = time.time()
-    parser = argparse.ArgumentParser(description="Fake data generator")
+    start_time=time.time()
+    parser=argparse.ArgumentParser(description="Fake data generator")
     parser.add_argument(
         "-u",
         "--users",
@@ -143,5 +151,5 @@ if __name__ == "__main__":
         action="store",
         default=10,
     )
-    args = parser.parse_args()
+    args=parser.parse_args()
     runner()
