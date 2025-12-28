@@ -1,5 +1,4 @@
 services:
-
   reverse_proxy:
     container_name: reverse_proxy
     image: nginx:1.29
@@ -9,8 +8,6 @@ services:
       - 81:81
     networks:
       - web_network
-    depends_on:
-      - api
 
   database:
     container_name: database
@@ -33,8 +30,8 @@ services:
     environment:
       - EXPRESS_PORT=2000
       - NODE_ENV=dev
-      - MONGO_USER=master
-      - MONGO_PASSWORD=123qwe
+      - MONGO_USER=catalogDatabaseApi
+      - MONGO_PASSWORD=qwe123
       - MONGO_DATABASE=catalogDB
       - NODE_ENV=development
     networks:
@@ -47,8 +44,34 @@ services:
     working_dir: /api
     command: bash -c "npm install && npm run dev"
     depends_on:
+      - reverse_proxy
       - database
       - whitelist
+
+  test:
+    container_name: test
+    image: node:23.8.0
+    environment:
+      - EXPRESS_PORT=2000
+      - MONGO_USER=catalogDatabaseApi
+      - MONGO_PASSWORD=qwe123
+      - MONGO_DATABASE=catalogDB
+      - TEST_USER=testUser
+      - TEST_PASSWORD=password124
+      - NODE_OPTIONS=$NODE_OPTIONS --experimental-vm-modules
+      - NODE_ENV=test
+    volumes:
+      - ./api:/api:rw
+      - ./logs:/logs:rw
+      - ./keys/:/keys:rw
+      - ./configs/jest.config.js:/jest.config.js:ro
+    working_dir: /api
+    command: bash -c "npm install && npm test"
+    depends_on:
+      - database
+      - whitelist
+    networks:
+      - database_network
 
   whitelist:
     container_name: whitelist
