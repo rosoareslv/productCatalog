@@ -1,4 +1,4 @@
-const db = db.getSiblingDB('catalogDB');
+const db = db.getSiblingDB("catalogDB");
 
 db.createUser({
   user: "master",
@@ -6,7 +6,18 @@ db.createUser({
   roles: [
     {
       role: "dbOwner",
-      db: "catalogDB"
-    }
-  ]
+      db: "catalogDB",
+    },
+  ],
+});
+
+db.createUser({
+  user: "catalogDatabaseApi",
+  pwd: "qwe123",
+  roles: [
+    {
+      role: "readWrite",
+      db: "catalogDB",
+    },
+  ],
 });
