@@ -1,17 +1,28 @@
 import request from "supertest";
-import app from "../app.js";
+import app from "../../app.js";
 
 const agent = request.agent(app);
 
-const resToken = await agent
-  .post("/auth/login")
-  .send({ username: "teste", password: "123" });
-
-const header = {
-  Authorization: "Bearer " + resToken.body.accessToken,
-};
-
+let header = null;
 let categoryId = null;
+
+beforeAll(async () => {
+  let username = Math.random().toString().substring(2, 15);
+  //create user
+  await agent.post("/auth/register").send({
+    name: "testUser",
+    username: username,
+    password: "123",
+  });
+  //authenticate
+  const res = await agent
+    .post("/auth/login")
+    .send({ username: username, password: "123" });
+
+  header = {
+    Authorization: "Bearer " + res.body.accessToken,
+  };
+});
 
 describe("Endpoints /category", () => {
   it("POST /category - Criar categoria", async () => {

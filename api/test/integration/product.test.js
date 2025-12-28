@@ -1,27 +1,37 @@
 import request from "supertest";
-import app from "../app.js";
+import app from "../../app.js";
 
 const agent = request.agent(app);
 
-const resToken = await agent
-  .post("/auth/login")
-  .send({ username: "teste", password: "123" });
-
-const header = {
-  Authorization: "Bearer " + resToken.body.accessToken,
-};
-
+let header = null;
 let productId = null;
+let category = null;
 
-const resCategory = await agent
-  .post("/category")
-  .set(header)
-  .send({
-    title: Math.random().toString(36).substring(2),
-    description: "teste automatizado",
+beforeAll(async () => {
+  let username = Math.random().toString().substring(2, 15);
+  //create user
+  await agent.post("/auth/register").send({
+    name: "testUser",
+    username: username,
+    password: "123",
   });
-
-let category = resCategory.body.title;
+  //authenticate
+  const resToken = await agent
+    .post("/auth/login")
+    .send({ username: username, password: "123" });
+  header = {
+    Authorization: "Bearer " + resToken.body.accessToken,
+  };
+  //create random category
+  const resCategory = await agent
+    .post("/category")
+    .set(header)
+    .send({
+      title: Math.random().toString(36).substring(2),
+      description: "teste automatizado",
+    });
+  category = resCategory.body.title;
+});
 
 describe("Endpoints /product", () => {
   it("POST /product - Criar Produto", async () => {
