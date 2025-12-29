@@ -2,13 +2,13 @@ import Joi from "joi";
 
 export const loginUserValidator = Joi.object({
   username: Joi.string().alphanum().max(20).required(),
-  password: Joi.string().alphanum().max(20).required(),
+  password: Joi.string().min(8).required(),
 });
 
 export const registerUserValidator = Joi.object({
   name: Joi.string().max(50).required(),
   username: Joi.string().alphanum().max(20).required(),
-  password: Joi.string().alphanum().required(),
+  password: Joi.string().min(8).required(),
 });
 
 export const registerProductValidator = Joi.object({
