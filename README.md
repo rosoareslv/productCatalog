@@ -16,8 +16,15 @@ This project of API was created firt to implement the best practices of building
 #### Security
 
 - JWT authentication
-- AccessToken + RefresToken
+- AccessToken + RefreshToken
 - Whitelist control of refreshTokens
+
+#### JWT implementation flow comparison
+
+<div align="center">
+<p><b>JWT without Refresh Token</b></p>
+<img src="./docs/jwtWithoutRefreshToken.png" width="600" alt="JWT without refresh token">
+</div>
 
 #### Documentation
 
