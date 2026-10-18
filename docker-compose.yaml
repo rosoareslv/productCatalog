@@ -33,7 +33,7 @@ services:
       - MONGO_USER=catalogDatabaseApi
       - MONGO_PASSWORD=qwe123
       - MONGO_DATABASE=catalogDB
-      - NODE_ENV=development
+      - MONGO_PORT=27017
     networks:
       - web_network
       - database_network

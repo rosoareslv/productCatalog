@@ -9,7 +9,6 @@ import { createSSHKeys } from "./functions/ssh.js";
 import { connectMongo } from "./functions/mongodb.js";
 import { connectRedis } from "./functions/redis.js";
 
-import { getConnection } from "./middleware/redis.js";
 import { getTokenInfo } from "./middleware/token.js";
 import { getUserUUID } from "./middleware/mongodb.js";
 
