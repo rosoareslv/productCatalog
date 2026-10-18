@@ -66,7 +66,7 @@ export async function login(req, res, next) {
 
 export async function refresh(req, res, next) {
   try {
-    let latestRefreshToken = await req.redis.get(req.username);
+    let latestRefreshToken = await getRedis().get(req.username);
     if (latestRefreshToken != req.cookies["refreshToken"]) {
       return res.status(401).json({ message: "Não autorizado" });
     }

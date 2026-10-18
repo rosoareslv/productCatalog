@@ -7,7 +7,7 @@ export function getAccessToken(req, res, next) {
     if (!token) {
       tokenNotProvided(req, res)
     }
-    tokenPayload = checkToken(token);
+    let tokenPayload = checkToken(token);
     if (tokenPayload.type !== 'access') {
       invalidToken(req, res)
     }
@@ -19,6 +19,7 @@ export function getAccessToken(req, res, next) {
     } else if (error.name == "TokenExpiredError") {
       expiredToken(req, res)
     }
+    next(error);
   }
 }
 
@@ -28,7 +29,7 @@ export function getRefreshToken(req, res, next) {
     if (!token) {
       tokenNotProvided(req, res)
     }
-    tokenPayload = checkToken(token);
+    let tokenPayload = checkToken(token);
     if (tokenPayload.type !== 'refresh') {
       invalidToken(req, res)
     }
@@ -40,5 +41,6 @@ export function getRefreshToken(req, res, next) {
     } else if (error.name == "TokenExpiredError") {
       expiredToken(req, res)
     }
+    next(error);
   }
 }
