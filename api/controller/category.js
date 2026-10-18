@@ -3,6 +3,7 @@ import {
   registerCategoryValidator,
   updateCategoryValidator,
 } from "../functions/validators.js";
+import { fieldValidationError } from "../middleware/handlers.js";
 
 export async function getAllCategories(req, res, next) {
   try {
@@ -56,9 +57,8 @@ export async function updateCategory(req, res, next) {
   try {
     let categoryValidation = updateCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
-      return res.status(400).json({
-        error: categoryValidation.error.message,
-      });
+      res.validationMessage = categoryValidation.error.message
+      fieldValidationError(req, res)
     }
     req.body.modifiedAt = Date.now();
     let category = await Category.findOneAndUpdate(
@@ -81,7 +81,8 @@ export async function createCategory(req, res, next) {
   try {
     let categoryValidation = registerCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
-      return res.status(400).json({ error: categoryValidation.error.message });
+      res.validationMessage = categoryValidation.error.message
+      fieldValidationError(req, res)
     }
     let existentCategory = await Category.findOne({
       title: req.body.title,

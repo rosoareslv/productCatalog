@@ -1,4 +1,5 @@
-import User from "../models/user.js";
+import User  from "../models/user.js";
+import { mongoInternalError } from "./handlers.js";
 
 export async function getUserUUID(req, res, next) {
   try {
@@ -6,8 +7,6 @@ export async function getUserUUID(req, res, next) {
     req.userId = user_db._id;
     next();
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Erro interno na verificação do usuário" });
+    mongoInternalError(error, req, res)
   }
 }

@@ -1,19 +1,36 @@
 import { checkToken } from "../functions/token.js";
+import { invalidToken, expiredToken } from "./handlers.js";
 
-export function getTokenInfo(req, res, next) {
+export function getAccessToken(req, res) {
   try {
-    let token = req.headers["authorization"] || req.cookies["refreshToken"];
+    let token = req.headers["authorization"];
     if (!token) {
-      return res.status(400).json({ message: "Token não fornecido" });
+      tokenNotProvided(req, res)
     }
     req.username = checkToken(token);
     next();
   } catch (error) {
     if (error.name == "JsonWebTokenError") {
-      return res.status(401).json({ message: "Token inválido" });
+      invalidToken(req, res)
     } else if (error.name == "TokenExpiredError") {
-      return res.status(401).json({ message: "Token expirado" });
+      expiredToken(req, res)
     }
-    next(error);
+  }
+}
+
+export function getRefreshToken(req, res) {
+  try {
+    let token = req.cookies["refreshToken"];
+    if (!token) {
+      tokenNotProvided(req, res)
+    }
+    checkToken(token);
+    next();
+  } catch (error) {
+    if (error.name == "JsonWebTokenError") {
+      invalidToken(req, res)
+    } else if (error.name == "TokenExpiredError") {
+      expiredToken(req, res)
+    }
   }
 }

@@ -20,6 +20,6 @@ export async function connect() {
   }
 }
 
-export function getClient() {
+export function get() {
   return client;
 }

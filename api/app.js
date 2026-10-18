@@ -7,9 +7,9 @@ import { createSSHKeys } from "./functions/ssh.js";
 import { connect as connectMongo } from "./functions/mongodb.js";
 import { connect as connectRedis } from "./functions/redis.js";
 
-import { getTokenInfo } from "./middleware/token.js";
-import { getUserUUID } from "./middleware/mongodb.js";
-import { errorHandler, invalidEndpoint } from "./middleware/error.js";
+import { getAccessToken } from "./middleware/token.js";
+import { getUserUUID } from "./middleware/user.js";
+import { defaultError, invalidEndpoint } from "./middleware/handlers.js";
 
 import { defineLogLevel } from "./functions/logger.js";
 
@@ -31,9 +31,9 @@ app.use("/docs", swaggerUi.serve, swaggerUi.setup(openApi));
 app.use(express.json());
 
 app.use("/auth", authRouter);
-app.use("/product", getTokenInfo, getUserUUID, productRouter);
-app.use("/category", getTokenInfo, getUserUUID, categoryRouter);
-app.use(errorHandler)
+app.use("/product", getAccessToken, getUserUUID, productRouter);
+app.use("/category", getAccessToken, getUserUUID, categoryRouter);
+app.use(defaultError)
 app.use("*", invalidEndpoint)
 
 if (process.env.NODE_ENV !== "test") {

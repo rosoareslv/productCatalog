@@ -6,6 +6,8 @@ import {
   registerUserValidator,
 } from "../functions/validators.js";
 
+import { get as getRedis } from "../functions/redis.js";
+
 export async function create(req, res, next) {
   try {
     let registerValidation = registerUserValidator.validate(req.body);
@@ -48,7 +50,7 @@ export async function login(req, res, next) {
       return res.status(401).json({ message: "Não autorizado" });
     }
     let { accessToken, refreshToken } = createTokens(req.body.username);
-    await req.redis.set(req.body.username, refreshToken);
+    await getRedis().set(req.body.username, refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "prod",
@@ -69,8 +71,7 @@ export async function refresh(req, res, next) {
       return res.status(401).json({ message: "Não autorizado" });
     }
     let { accessToken, refreshToken } = createTokens(req.username);
-    req.redis.set(req.username, refreshToken);
-    //verificar propriedade sameSite para futuro proximo
+    await getRedis().set(req.username, refreshToken);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "prod",
