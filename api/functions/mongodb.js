@@ -1,14 +1,30 @@
 import mongoose from "mongoose";
 
+const CONNECTION_URL = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@database:27017/${process.env.MONGO_DATABASE}`
+
 export async function connectMongo() {
+
   try {
-    mongoose.connection.on("disconnected", () =>
-      console.log("MongoDB disconnected"),
-    );
+
+    mongoose.connection.on('connected', () => console.log('MongoDB Connected'));
+
+    mongoose.connection.on("disconnected", () => console.log("MongoDB Disconnected"));
+
+    mongoose.connection.on('error', (err) => console.log(`MongoDB error: ${err}`));
+
     mongoose.connection.on("close", () => console.log("MongoDB close"));
+
     await mongoose.connect(
-      `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@database:27017/${process.env.MONGO_DATABASE}`,
+      CONNECTION_URL,
+      {
+        maxPoolSize: 100,
+        minPoolSize: 10,
+        maxIdleTimeMS: 30000,
+        waitQueueTimeoutMS: 5000, //waiting time if the pool is fully used
+      }
+
     );
+
   } catch (error) {
     throw error;
   }
