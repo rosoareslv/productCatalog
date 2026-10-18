@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 export function createTokens(username) {
   try {
     let accessToken = jwt.sign(
-      { username: username, rand: Math.random() },
+      { username: username, rand: Math.random(), type: 'access' },
       process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
@@ -11,7 +11,7 @@ export function createTokens(username) {
       },
     );
     let refreshToken = jwt.sign(
-      { username: username, rand: Math.random() },
+      { username: username, rand: Math.random(), type: 'refresh' },
       process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
@@ -26,8 +26,7 @@ export function createTokens(username) {
 
 export function checkToken(token) {
   try {
-    let obj = jwt.verify(token.replace("Bearer ", ""), process.env.PRIVATE_KEY);
-    return obj.username;
+    return jwt.verify(token.replace("Bearer ", ""), process.env.PRIVATE_KEY);
   } catch (error) {
     throw error;
   }
