@@ -9,7 +9,7 @@ import { connect as connectRedis } from "./functions/redis.js";
 
 import { getAccessToken } from "./middleware/token.js";
 import { getUserUUID } from "./middleware/user.js";
-import { defaultError, invalidEndpoint } from "./middleware/handlers.js";
+import { defaultError, invalidEndpoint } from "./handlers/default.js";
 
 import { defineLogLevel } from "./functions/logger.js";
 

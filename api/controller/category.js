@@ -3,7 +3,7 @@ import {
   registerCategoryValidator,
   updateCategoryValidator,
 } from "../functions/validators.js";
-import { fieldValidationError } from "../middleware/handlers.js";
+import { fieldValidationError } from "../handlers/validation.js";
 
 export async function getAllCategories(req, res, next) {
   try {

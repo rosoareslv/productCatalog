@@ -10,10 +10,10 @@ import { get as getRedis } from "../functions/redis.js";
 
 export async function create(req, res, next) {
   try {
-    let registerValidation = registerUserValidator.validate(req.body);
-    if (registerValidation.error != undefined) {
+    let validation = registerUserValidator.validate(req.body);
+    if (validation.error != undefined) {
       return res.status(400).json({
-        error: registerValidation.error.message,
+        error: validation.error.message,
       });
     }
     let username = await User.findOne({ username: req.body.username });
