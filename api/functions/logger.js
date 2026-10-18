@@ -1,4 +1,5 @@
 import logger from "morgan";
+import fs from "fs";
 
 export function defineLogLevel(app, environment) {
 
