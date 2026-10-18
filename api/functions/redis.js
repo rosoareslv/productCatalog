@@ -1,26 +1,25 @@
 import { createClient } from "redis";
 
-let redisClient = null;
+let client = null;
 
-export async function connectRedis() {
+export async function connect() {
   try {
-    redisClient = createClient({
+    client = createClient({
       url: "redis://whitelist:6379",
     });
 
-    redisClient.on("error", (err) => {
-      console.error("Redis error:", err);
-    });
+    client.on("error", (err) => console.error(`Redis error: ${err}`));
 
-    redisClient.on("end", () => {
-      console.log("Redis disconnected");
-    });
-    await redisClient.connect();
+    client.on("end", () => console.log("Redis disconnected"));
+
+    client.on('ready', () => console.log("Redis OK"));
+
+    await client.connect();
   } catch (error) {
     throw error;
   }
 }
 
-export function getRedisClient() {
-  return redisClient;
+export function getClient() {
+  return client;
 }
