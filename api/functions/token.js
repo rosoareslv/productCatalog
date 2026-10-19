@@ -8,7 +8,7 @@ const execAsync = util.promisify(exec);
 export function createTokens(username) {
   try {
     let accessToken = jwt.sign(
-      { username: username, rand: Math.random(), type: 'access' },
+      { username: username, rand: Math.random(), type: "access" },
       process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
@@ -16,7 +16,7 @@ export function createTokens(username) {
       },
     );
     let refreshToken = jwt.sign(
-      { username: username, rand: Math.random(), type: 'refresh' },
+      { username: username, rand: Math.random(), type: "refresh" },
       process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",

@@ -12,7 +12,7 @@ export async function connect() {
 
     client.on("end", () => console.log("Redis disconnected"));
 
-    client.on('ready', () => console.log("Redis OK"));
+    client.on("ready", () => console.log("Redis OK"));
 
     await client.connect();
   } catch (error) {

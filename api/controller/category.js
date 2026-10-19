@@ -5,21 +5,16 @@ import {
 } from "../functions/validators.js";
 import { fieldValidationError } from "../handlers/validation.js";
 
-export async function getAllCategories(req, res, next) {
+export async function getAll(req, res, next) {
   try {
     let categories = await Category.find({ ownerId: req.userId });
-    if (categories.length == 0) {
-      return res.status(404).json({
-        message: `Sem categorias cadastradas`,
-      });
-    }
     return res.status(200).json({ categories });
   } catch (error) {
     next(error);
   }
 }
 
-export async function getCategory(req, res, next) {
+export async function get(req, res, next) {
   try {
     let category = await Category.findOne({
       _id: req.params["id"],
@@ -27,7 +22,7 @@ export async function getCategory(req, res, next) {
     });
     if (category == null) {
       return res.status(404).json({
-        message: `Categoria ${req.params["id"]} não encontrada`,
+        message: `Category ${req.params["id"]} not found`,
       });
     }
     return res.status(200).json(category);
@@ -36,16 +31,16 @@ export async function getCategory(req, res, next) {
   }
 }
 
-export async function deleteCategory(req, res, next) {
+export async function deleteOne(req, res, next) {
   try {
     let category = await Category.findOneAndDelete({
       _id: req.params["id"],
       ownerId: req.userId,
     });
-    if (category == null) {
+    if (!category) {
       return res
         .status(404)
-        .json({ message: `Categoria ${req.params["id"]} não encontrada` });
+        .json({ message: `Category ${req.params["id"]} not found` });
     }
     return res.status(200).json(category);
   } catch (error) {
@@ -53,12 +48,12 @@ export async function deleteCategory(req, res, next) {
   }
 }
 
-export async function updateCategory(req, res, next) {
+export async function update(req, res, next) {
   try {
-    let categoryValidation = updateCategoryValidator.validate(req.body);
-    if (categoryValidation.error != undefined) {
-      res.validationMessage = categoryValidation.error.message
-      return fieldValidationError(req, res)
+    let res = updateCategoryValidator.validate(req.body);
+    if (res.error != undefined) {
+      res.validationMessage = categoryValidation.error.message;
+      return fieldValidationError(req, res);
     }
     req.body.modifiedAt = Date.now();
     let category = await Category.findOneAndUpdate(
@@ -66,9 +61,9 @@ export async function updateCategory(req, res, next) {
       req.body,
       { returnDocument: "after", runValidators: true },
     );
-    if (category == null) {
+    if (!category) {
       return res.status(404).json({
-        message: `Produto ${req.params["id"]} não encontrado`,
+        message: `Category ${req.params["id"]} not found`,
       });
     }
     return res.status(200).json(category);
@@ -77,20 +72,20 @@ export async function updateCategory(req, res, next) {
   }
 }
 
-export async function createCategory(req, res, next) {
+export async function create(req, res, next) {
   try {
-    let categoryValidation = registerCategoryValidator.validate(req.body);
-    if (categoryValidation.error != undefined) {
-      res.validationMessage = categoryValidation.error.message
-      return fieldValidationError(req, res)
+    let res = registerCategoryValidator.validate(req.body);
+    if (res.error != undefined) {
+      res.validationMessage = categoryValidation.error.message;
+      return fieldValidationError(req, res);
     }
     let existentCategory = await Category.findOne({
       title: req.body.title,
       ownerId: req.userId,
     });
     if (existentCategory) {
-      return res.status(403).json({
-        message: `Categoria já cadastrada`,
+      return res.status(409).json({
+        message: `Category with title ${req.body.title} already exists`,
       });
     }
     let body = req.body;

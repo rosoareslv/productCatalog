@@ -1,4 +1,4 @@
-import User  from "../models/user.js";
+import User from "../models/user.js";
 import { mongoInternalError, userNotFound } from "../handlers/database.js";
 
 export async function getUserUUID(req, res, next) {
