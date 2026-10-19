@@ -9,7 +9,7 @@ export function createTokens(username) {
   try {
     let accessToken = jwt.sign(
       { username: username, rand: Math.random(), type: "access" },
-      process.env.PRIVATE_KEY,
+      process.env.SECRET_KEY,
       {
         algorithm: "RS256",
         expiresIn: "10m",
@@ -17,7 +17,7 @@ export function createTokens(username) {
     );
     let refreshToken = jwt.sign(
       { username: username, rand: Math.random(), type: "refresh" },
-      process.env.PRIVATE_KEY,
+      process.env.SECRET_KEY,
       {
         algorithm: "RS256",
         expiresIn: "1d",
@@ -31,7 +31,7 @@ export function createTokens(username) {
 
 export function checkToken(token) {
   try {
-    return jwt.verify(token.replace("Bearer ", ""), process.env.PRIVATE_KEY);
+    return jwt.verify(token.replace("Bearer ", ""), process.env.SECRET_KEY);
   } catch (error) {
     throw error;
   }
@@ -42,7 +42,7 @@ export async function createJWTKeys() {
     const { stdout, stderr } = await execAsync(
       "echo 'yes' | ssh-keygen -t rsa -b 4096 -m PEM -f /keys/id_rsa -N ''",
     );
-    process.env.PRIVATE_KEY = fs.readFileSync("/keys/id_rsa").toString();
+    process.env.SECRET_KEY = fs.readFileSync("/keys/id_rsa").toString();
   } catch (error) {
     throw error;
   }
