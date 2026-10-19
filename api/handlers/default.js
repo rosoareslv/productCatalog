@@ -2,7 +2,7 @@ export function invalidEndpoint(req, res) {
     return res.status(404).json({ message: "Unavailable endpoint" });
 }
 
-export function defaultError(err, req, res) {
+export function defaultError(err, req, res, next) {
     console.log(err)
     return res.status(500).json({ message: "Internal API error" });
 }

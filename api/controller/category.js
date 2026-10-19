@@ -58,7 +58,7 @@ export async function updateCategory(req, res, next) {
     let categoryValidation = updateCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
       res.validationMessage = categoryValidation.error.message
-      fieldValidationError(req, res)
+      return fieldValidationError(req, res)
     }
     req.body.modifiedAt = Date.now();
     let category = await Category.findOneAndUpdate(
@@ -82,7 +82,7 @@ export async function createCategory(req, res, next) {
     let categoryValidation = registerCategoryValidator.validate(req.body);
     if (categoryValidation.error != undefined) {
       res.validationMessage = categoryValidation.error.message
-      fieldValidationError(req, res)
+      return fieldValidationError(req, res)
     }
     let existentCategory = await Category.findOne({
       title: req.body.title,
