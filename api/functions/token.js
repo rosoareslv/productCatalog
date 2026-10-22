@@ -4,7 +4,7 @@ export function createTokens(username) {
   try {
     let accessToken = jwt.sign(
       { username: username, rand: Math.random(), type: "access" },
-      process.env.SECRET_KEY,
+      process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
         expiresIn: "10m",
@@ -12,7 +12,7 @@ export function createTokens(username) {
     );
     let refreshToken = jwt.sign(
       { username: username, rand: Math.random(), type: "refresh" },
-      process.env.SECRET_KEY,
+      process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
         expiresIn: "1d",
@@ -26,7 +26,7 @@ export function createTokens(username) {
 
 export function checkToken(token) {
   try {
-    return jwt.verify(token.replace("Bearer ", ""), process.env.SECRET_KEY);
+    return jwt.verify(token.replace("Bearer ", ""), process.env.PUBLIC_KEY);
   } catch (error) {
     throw error;
   }
