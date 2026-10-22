@@ -5,7 +5,7 @@ let client = null;
 export async function connect() {
   try {
     client = createClient({
-      url: "redis://whitelist:6379",
+      url: `redis://whitelist:${process.env.REDIS_PORT}`,
     });
 
     client.on("error", (err) => console.error(`Redis error: ${err}`));
