@@ -6,7 +6,6 @@ import {
   update,
   create,
 } from "../controller/product.js";
-import { deleteOne } from "../controller/category.js";
 
 const router = express.Router();
 

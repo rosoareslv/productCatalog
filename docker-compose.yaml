@@ -28,12 +28,9 @@ services:
     container_name: api
     image: node:23.8.0
     environment:
-      - EXPRESS_PORT=2000
       - NODE_ENV=dev
-      - MONGO_USER=catalogDatabaseApi
-      - MONGO_PASSWORD=qwe123
-      - MONGO_DATABASE=catalogDB
-      - MONGO_PORT=27017
+    env_file:
+      - ./configs/.env
     networks:
       - web_network
       - database_network
@@ -52,12 +49,6 @@ services:
     container_name: test
     image: node:23.8.0
     environment:
-      - EXPRESS_PORT=2000
-      - MONGO_USER=catalogDatabaseApi
-      - MONGO_PASSWORD=qwe123
-      - MONGO_DATABASE=catalogDB
-      - TEST_USER=testUser
-      - TEST_PASSWORD=password124
       - NODE_OPTIONS=$NODE_OPTIONS --experimental-vm-modules
       - NODE_ENV=test
     volumes:
@@ -66,7 +57,7 @@ services:
       - ./keys/:/keys:rw
       - ./configs/jest.config.js:/jest.config.js:ro
     working_dir: /api
-    command: bash -c "npm install && npm test"
+    command: bash -c "npm install && çnpm test"
     depends_on:
       - database
       - whitelist

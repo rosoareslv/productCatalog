@@ -84,7 +84,7 @@ export async function update(req, res, next) {
   }
 }
 
-export async function createProduct(req, res, next) {
+export async function create(req, res, next) {
   try {
     let productValidation = registerProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
