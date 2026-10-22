@@ -7,7 +7,7 @@ const privatePath = path.join(outDir, 'private.pem');
 const publicPath = path.join(outDir, 'public.pem');
 
 if (fs.existsSync(privatePath)) {
-  console.error('Chaves já existem em', outDir);
+  console.error('Keys already exists! - NOK', outDir);
   process.exit(1);
 }
 
@@ -20,4 +20,4 @@ const { privateKey, publicKey } = generateKeyPairSync('rsa', {
 fs.writeFileSync(privatePath, privateKey);
 fs.writeFileSync(publicPath, publicKey);
 
-console.log('Chaves para assinatura de token JWT - OK');
+console.log('Keys created - OK');
