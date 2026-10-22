@@ -26,7 +26,7 @@ export function createTokens(username) {
 
 export function checkToken(token) {
   try {
-    return jwt.verify(token.replace("Bearer ", ""), process.env.PUBLIC_KEY);
+    return jwt.verify(token.replace("Bearer ", ""), process.env.PUBLIC_KEY, { algorithms: ["RS256"] });
   } catch (error) {
     throw error;
   }
