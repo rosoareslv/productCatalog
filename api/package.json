@@ -1,5 +1,5 @@
 {
-  "name": "ProductCatalog",
+  "name": "product-catalog",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -15,7 +15,6 @@
     "bcryptjs": "^3.0.2",
     "cookie-parser": "~1.4.4",
     "express": "~4.21.1",
-    "http-errors": "~1.6.3",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.15.2",
