@@ -3,7 +3,6 @@ import swaggerUi from "swagger-ui-express";
 import cookieParser from "cookie-parser";
 import openApi from "./docs/setup.js";
 
-import { createJWTKeys } from "./functions/token.js";
 import { connect as connectMongo } from "./functions/mongodb.js";
 import { connect as connectRedis } from "./functions/redis.js";
 
@@ -17,7 +16,6 @@ import authRouter from "./routes/auth.js";
 import productRouter from "./routes/product.js";
 import categoryRouter from "./routes/category.js";
 
-await createJWTKeys();
 await connectMongo();
 await connectRedis();
 
