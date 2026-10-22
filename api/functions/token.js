@@ -1,9 +1,4 @@
 import jwt from "jsonwebtoken";
-import { exec } from "child_process";
-import fs from "fs";
-import util from "util";
-
-const execAsync = util.promisify(exec);
 
 export function createTokens(username) {
   try {
@@ -32,17 +27,6 @@ export function createTokens(username) {
 export function checkToken(token) {
   try {
     return jwt.verify(token.replace("Bearer ", ""), process.env.SECRET_KEY);
-  } catch (error) {
-    throw error;
-  }
-}
-
-export async function createJWTKeys() {
-  try {
-    const { stdout, stderr } = await execAsync(
-      "echo 'yes' | ssh-keygen -t rsa -b 4096 -m PEM -f /keys/id_rsa -N ''",
-    );
-    process.env.SECRET_KEY = fs.readFileSync("/keys/id_rsa").toString();
   } catch (error) {
     throw error;
   }
