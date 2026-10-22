@@ -5,21 +5,16 @@ import {
   registerProductValidator,
 } from "../functions/validators.js";
 
-export async function getAllProducts(req, res, next) {
+export async function getAll(req, res, next) {
   try {
     let products = await Product.find({ ownerId: req.userId });
-    if (products.length == 0) {
-      return res.status(404).json({
-        message: `sem produtos cadastrados`,
-      });
-    }
     return res.status(200).json({ products });
   } catch (error) {
     next(error);
   }
 }
 
-export async function getProduct(req, res, next) {
+export async function get(req, res, next) {
   try {
     let product = await Product.findOne({
       _id: req.params["id"],
@@ -27,7 +22,7 @@ export async function getProduct(req, res, next) {
     });
     if (product == null) {
       return res.status(404).json({
-        message: `Produto ${req.params["id"]} não identificado`,
+        message: `Product ${req.params["id"]} unknown`,
       });
     }
     return res.status(200).json(product);
@@ -36,7 +31,7 @@ export async function getProduct(req, res, next) {
   }
 }
 
-export async function deleteProduct(req, res, next) {
+export async function deleteOne(req, res, next) {
   try {
     let product = await Product.findOneAndDelete({
       _id: req.params["id"],
@@ -44,7 +39,7 @@ export async function deleteProduct(req, res, next) {
     });
     if (product == null) {
       return res.status(404).json({
-        message: `Produto ${req.params["id"]} não encontrado`,
+        message: `Product ${req.params["id"]} unknown`,
       });
     }
     return res.status(200).json(product);
@@ -53,7 +48,7 @@ export async function deleteProduct(req, res, next) {
   }
 }
 
-export async function updateProduct(req, res, next) {
+export async function update(req, res, next) {
   try {
     let productValidation = updateProductValidator.validate(req.body);
     if (productValidation.error != undefined) {
@@ -68,7 +63,7 @@ export async function updateProduct(req, res, next) {
       });
       if (category == null) {
         return res.status(404).json({
-          message: `Categoria ${req.body.category} não identificada`,
+          message: `Category ${req.body.category} unknown`,
         });
       }
     }
@@ -80,7 +75,7 @@ export async function updateProduct(req, res, next) {
     );
     if (product == null) {
       return res.status(404).json({
-        message: `Produto ${req.params["id"]} não encontrado`,
+        message: `Product ${req.params["id"]} unknown`,
       });
     }
     return res.status(200).json(product);
@@ -104,7 +99,7 @@ export async function createProduct(req, res, next) {
       });
       if (category == null) {
         return res.status(404).json({
-          message: `Categoria ${req.body.category} não identificada`,
+          message: `Category ${req.body.category} unknown`,
         });
       }
     }

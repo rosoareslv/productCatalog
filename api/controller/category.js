@@ -50,8 +50,8 @@ export async function deleteOne(req, res, next) {
 
 export async function update(req, res, next) {
   try {
-    let res = updateCategoryValidator.validate(req.body);
-    if (res.error != undefined) {
+    let validate = updateCategoryValidator.validate(req.body);
+    if (validate.error != undefined) {
       res.validationMessage = categoryValidation.error.message;
       return fieldValidationError(req, res);
     }
@@ -74,8 +74,8 @@ export async function update(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    let res = registerCategoryValidator.validate(req.body);
-    if (res.error != undefined) {
+    let validate = registerCategoryValidator.validate(req.body);
+    if (validate.error != undefined) {
       res.validationMessage = categoryValidation.error.message;
       return fieldValidationError(req, res);
     }

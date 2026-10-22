@@ -47,7 +47,7 @@ export async function login(req, res, next) {
     }
     let is_user = await checkPassword(req.body.password, user_db.password);
     if (!is_user) {
-      return res.status(401).json({ message: "Não autorizado" });
+      return res.status(401).json({ message: "Not authorized" });
     }
     let { accessToken, refreshToken } = createTokens(req.body.username);
     await getRedis().set(req.body.username, refreshToken);
@@ -68,7 +68,7 @@ export async function refresh(req, res, next) {
   try {
     let latestRefreshToken = await getRedis().get(req.username);
     if (latestRefreshToken != req.cookies["refreshToken"]) {
-      return res.status(401).json({ message: "Não autorizado" });
+      return res.status(401).json({ message: "Not authorized" });
     }
     let { accessToken, refreshToken } = createTokens(req.username);
     await getRedis().set(req.username, refreshToken);
