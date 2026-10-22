@@ -1,6 +1,6 @@
 ## ProductCatalog API
 
-This project was created to implement the best practices about creating robusts APIs.
+This project was created to implement the best practices about creating robust APIs.
 
 #### Stack
 
@@ -8,7 +8,6 @@ This project was created to implement the best practices about creating robusts 
   - ExpressJS - Api framework
   - Mongoose - MongoDB schemas and functions
   - Jest - Tests
-- :snake: Python - Create fake data
 - :whale: Docker - Setup environments
 - :four_leaf_clover: MongoDB - Database
 - :red_circle: Redis - Security
@@ -28,7 +27,7 @@ This project was created to implement the best practices about creating robusts 
 
 #### Documentation
 
-When app is running, go to _/docs_ endpoint.It follows the openapi specification
+When app is running, go to _/docs_ endpoint. It follows the openapi specification
 
 #### Development Deploy
 
@@ -44,7 +43,7 @@ docker-compose -f docker-compose.yaml up test
 
 #### To implement:
 
-- Fake data generator for performance worload tests
+- Fake data generator for performance workload tests
 - CI/CD
 
 #### Key improvements:
@@ -55,5 +54,5 @@ docker-compose -f docker-compose.yaml up test
 - Performance metrics
 - Structured logs
 - Healthcheck
-- Set resoruces usage (CPU, RAM...) in compose files
+- Set resources usage (CPU, RAM...) in compose files
 - Two factor authentication
