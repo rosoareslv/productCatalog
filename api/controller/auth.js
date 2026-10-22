@@ -19,7 +19,7 @@ export async function create(req, res, next) {
     let username = await User.findOne({ username: req.body.username });
     if (username != null) {
       return res.status(403).json({
-        message: "Username indisponível",
+        message: "Unavailable username",
         username: req.body.username,
       });
     }
@@ -41,8 +41,8 @@ export async function login(req, res, next) {
     }
     let user_db = await User.findOne({ username: req.body.username });
     if (user_db == null) {
-      return res.status(404).json({
-        message: "Usuário não encontrado",
+      return res.status(401).json({
+        message: "Not authorized",
       });
     }
     let is_user = await checkPassword(req.body.password, user_db.password);
