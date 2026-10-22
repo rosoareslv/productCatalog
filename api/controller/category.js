@@ -52,7 +52,7 @@ export async function update(req, res, next) {
   try {
     let validate = updateCategoryValidator.validate(req.body);
     if (validate.error != undefined) {
-      res.validationMessage = categoryValidation.error.message;
+      res.validationMessage = validate.error.message;
       return fieldValidationError(req, res);
     }
     req.body.modifiedAt = Date.now();
@@ -76,7 +76,7 @@ export async function create(req, res, next) {
   try {
     let validate = registerCategoryValidator.validate(req.body);
     if (validate.error != undefined) {
-      res.validationMessage = categoryValidation.error.message;
+      res.validationMessage = validate.error.message;
       return fieldValidationError(req, res);
     }
     let existentCategory = await Category.findOne({
