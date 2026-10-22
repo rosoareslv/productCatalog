@@ -1,6 +1,6 @@
 ## ProductCatalog API
 
-This project of API was created firt to implement the best practices of building APIs, after handling a business logic Product and Categories for multiple clients, something which was created to feed an e-commerce, for example.
+This project was created to implement the best practices about creating robusts APIs.
 
 #### Stack
 
@@ -42,24 +42,9 @@ docker compose -f docker-compose.yaml up api
 docker-compose -f docker-compose.yaml up test
 ```
 
-#### Generate fake data
-
-Run a script to create fake data for performance and development contexts inside 'mock' folder
-
-You can set the amount of entity you want to generate by:
-
-- Threads (-t / -threads) - Up to 20
-- Users (-u / -users) - Up to 100
-- Categories (-c / -categories) - Up to 20
-- Products (-p / -products) - Unlimited
-
-```bash
-python script.py -t 10 -u 30 -p 10000 -c 15
-```
-
 #### To implement:
 
-- IA in mock code to generate data mock
+- Fake data generator for performance worload tests
 - CI/CD
 
 #### Key improvements:
