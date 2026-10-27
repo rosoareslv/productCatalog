@@ -12,9 +12,9 @@ services:
   database:
     container_name: database
     image: mongo:6.0
+    env_file:
+      - ./configs/.env
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=admin
       - TZ=America/Sao_Paulo
     ports:
       - 27017:27017
@@ -23,7 +23,13 @@ services:
       - dev_data:/data/db:rw
     networks:
       - database_network
-
+    healthcheck:
+      test: mongosh -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --eval "db.adminCommand('ping')" --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    
   api:
     container_name: api
     image: node:23.8.0
@@ -60,8 +66,11 @@ services:
     working_dir: /api
     command: bash -c "npm install && npm test"
     depends_on:
-      - database
-      - whitelist
+      database:
+        condition: service_healthy
+      whitelist:
+        condition: service_healthy
+    
     networks:
       - database_network
 
@@ -70,6 +79,12 @@ services:
     image: redis:8.0
     networks:
       - database_network
+    healthcheck:
+      test: "redis-cli ping"
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
 
 networks:
   web_network:
