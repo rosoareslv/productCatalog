@@ -12,12 +12,13 @@ if (fs.existsSync(privatePath)) {
 }
 
 const { privateKey, publicKey } = generateKeyPairSync('rsa', {
-    modulusLength: 4096,
-    publicKeyEncoding: { type: 'spki', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
-  });
+  modulusLength: 4096,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' },
+});
 
-fs.writeFileSync(privatePath, privateKey);
+fs.mkdirSync(outDir, { recursive: true })
+fs.writeFileSync(privatePath, privateKey, { mode: 0o600 });
 fs.writeFileSync(publicPath, publicKey);
 
 console.log('Keys created - OK');
