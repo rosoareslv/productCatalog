@@ -1,16 +1,16 @@
 ## ProductCatalog API
 
-This project was created to implement the best practices about creating robust APIs.
+Products and Categories stored per user with JWT implementation.
 
 #### Stack
 
 - Nodejs - Runtime
   - ExpressJS - Api framework
   - Mongoose - MongoDB schemas and functions
-  - Jest - Tests
+  - Vitest - Tests
 - :whale: Docker - Setup environments
 - :four_leaf_clover: MongoDB - Database
-- :red_circle: Redis - Security
+- :red_circle: Redis - Refresh token whitelist implementation
 
 #### Security
 
@@ -22,6 +22,11 @@ This project was created to implement the best practices about creating robust A
 
 <div align="center">
 <p><b>JWT without Refresh Token</b></p>
+<img src="./docs/jwtWithoutRefreshToken.png" width="600" alt="JWT without refresh token">
+</div>
+
+<div align="center">
+<p><b>JWT with Refresh Token</b></p>
 <img src="./docs/jwtWithoutRefreshToken.png" width="600" alt="JWT without refresh token">
 </div>
 
@@ -53,6 +58,16 @@ When app is running, go to _/docs_ endpoint. It follows the openapi specificatio
 - Products and categories are scoped to their owner. 
 - A user can only see and change their own records.
 
+#### Setup
+1. Create .env file using the '/configs/.env.example' file using your credentials
+2. Generate JWT Keys pair running the command above which is located inside '/api' folder:
+```bash
+npm run keys:generate
+```
+3. Deploy or Test the application using the commands above for each scenario.
+
+
+
 #### Development Deploy
 
 ```bash
@@ -62,7 +77,7 @@ docker compose -f docker-compose.yaml up api
 #### Test Execution
 
 ```bash
-docker-compose -f docker-compose.yaml up test
+docker compose -f docker-compose.yaml up test
 ```
 
 #### To implement:

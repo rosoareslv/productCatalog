@@ -15,13 +15,19 @@ import { defineLogLevel } from "./functions/logger.js";
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/product.js";
 import categoryRouter from "./routes/category.js";
-import path from 'path';
-import fs from 'fs';
 
-const keysDir = path.resolve(import.meta.dirname, '..', 'keys');
+import { fileURLToPath } from "url";
+import path from "path";
+import fs from "fs";
 
-process.env.PRIVATE_KEY = fs.readFileSync(path.join(keysDir, 'private.pem'))
-process.env.PUBLIC_KEY = fs.readFileSync(path.join(keysDir, 'public.pem'))
+const keysDir = path.resolve(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "keys",
+);
+
+process.env.PRIVATE_KEY = fs.readFileSync(path.join(keysDir, "private.pem"));
+process.env.PUBLIC_KEY = fs.readFileSync(path.join(keysDir, "public.pem"));
 
 await connectMongo();
 await connectRedis();

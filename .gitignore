@@ -121,5 +121,4 @@ dist
 /backup_dev
 /keys
 /logs
-/dev_data
 __pycache__

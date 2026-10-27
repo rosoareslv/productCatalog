@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../../app.js";
+import { afterAll } from "vitest";
 
 const agent = request.agent(app); // the cookies are saved and redirected automatically
 
@@ -9,34 +10,34 @@ let refreshToken;
 let username = Math.random().toString().substring(2, 15);
 
 describe("Endpoints /auth", () => {
-  describe("Teste na criação de usuário", () => {
-    it("POST /auth/register - Criar usuário", async () => {
+  describe("User creation test", () => {
+    it("POST /auth/register - Create User", async () => {
       const res = await agent
         .post("/auth/register")
-        .send({ name: "Rodrigo", username: username, password: "123" });
+        .send({ name: "Rodrigo", username: username, password: "12345678" });
       expect(res.status).toEqual(200);
       expect(res.type).toEqual("application/json");
       expect(res.body).toEqual({});
     });
 
-    it("POST /auth/register -  Username indisponível", async () => {
+    it("POST /auth/register -  Unavailable Username", async () => {
       const res = await agent
         .post("/auth/register")
-        .send({ name: "Rodrigo", username: username, password: "123" });
+        .send({ name: "Rodrigo", username: username, password: "12345678" });
       expect(res.status).toEqual(403);
       expect(res.type).toEqual("application/json");
       expect(res.body).toEqual({
-        message: "Username indisponível",
+        message: "Unavailable username",
         username: username,
       });
     });
   });
 
-  describe("Teste na autenticação de usuário", () => {
-    it("POST /auth/login - Garantir Acesso", async () => {
+  describe("User authentication test", () => {
+    it("POST /auth/login - Grant Access", async () => {
       const res = await agent
         .post("/auth/login")
-        .send({ username: username, password: "123" });
+        .send({ username: username, password: "12345678" });
       expect(res.status).toEqual(200);
       expect(res.type).toEqual("application/json");
       expect(res.body).toHaveProperty("accessToken");
@@ -46,24 +47,61 @@ describe("Endpoints /auth", () => {
       refreshToken = res.headers["set-cookie"][0].split(";")[0].split("=")[1];
     });
 
-    it("POST /auth/login - Usuário inexistente", async () => {
+    it("POST /auth/login - Nonexistent User test", async () => {
       const res = await agent
         .post("/auth/login")
-        .send({ username: "naoExiste", password: "123" });
-      expect(res.status).toEqual(404);
-      expect(res.type).toEqual("application/json");
-    });
-
-    it("POST /auth/login - Usuário com senha errada", async () => {
-      const res = await agent
-        .post("/auth/login")
-        .send({ username: username, password: "456" });
+        .send({ username: "naoExiste", password: "12345678" });
       expect(res.status).toEqual(401);
       expect(res.type).toEqual("application/json");
+      expect(res.body).toEqual({
+        message: "Not authorized",
+      });
     });
 
-    describe("Verificar funcionamento do ciclo de vida dos tokens", () => {
-      it("GET /auth/refresh - Gerar novos AccessToken e RefreshToken", async () => {
+    it("POST /auth/login - Wrong password test", async () => {
+      const res = await agent
+        .post("/auth/login")
+        .send({ username: username, password: "87654321" });
+      expect(res.status).toEqual(401);
+      expect(res.type).toEqual("application/json");
+      expect(res.body).toEqual({
+        message: "Not authorized",
+      });
+    });
+
+    describe("Check token lifecycle", () => {
+      it("Get /product - Without accessToken test", async () => {
+        const res = await agent.get("/product");
+        expect(res.status).toEqual(401);
+        expect(res.type).toEqual("application/json");
+        expect(res.body).toEqual({
+          message: "Token not provided",
+        });
+      });
+
+      it("Get /product - With invalid accessToken test", async () => {
+        const res = await agent.get("/product").set({
+          Authorization: "Bearer " + accessToken + "123",
+        });
+        expect(res.status).toEqual(401);
+        expect(res.type).toEqual("application/json");
+        expect(res.body).toEqual({
+          message: "Invalid token",
+        });
+      });
+
+      it("Get /product - With valid accessToken test", async () => {
+        const res = await agent.get("/product").set({
+          Authorization: "Bearer " + accessToken,
+        });
+        expect(res.status).toEqual(200);
+        expect(res.type).toEqual("application/json");
+        expect(res.body).toEqual({
+          products: [],
+        });
+      });
+
+      it("GET /auth/refresh - Create new Access/Refresh tokens test", async () => {
         const res = await agent.get("/auth/refresh");
         expect(res.status).toEqual(200);
         expect(res.type).toEqual("application/json");
@@ -75,14 +113,14 @@ describe("Endpoints /auth", () => {
         ).not.toEqual(refreshToken);
       });
 
-      it("GET /auth/refresh - Verificar se o refreshToken antigo foi revogado", async () => {
+      it("GET /auth/refresh - Verify if old refreshToken got invalid test", async () => {
         const agent = request.agent(app); //Needed a new agent object to set manually an old refreshToken
         const res = await agent
           .get("/auth/refresh")
           .set("Cookie", `refreshToken=${refreshToken}`);
         expect(res.status).toEqual(401);
         expect(res.type).toEqual("application/json");
-        expect(res.body).toEqual({ message: "Não autorizado" });
+        expect(res.body).toEqual({ message: "Not authorized" });
       });
     });
   });
