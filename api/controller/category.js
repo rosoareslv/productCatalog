@@ -92,7 +92,7 @@ export async function create(req, res, next) {
     body.ownerId = req.userId;
     let category = new Category(body);
     await category.save();
-    return res.status(200).json(category);
+    return res.status(201).json(category);
   } catch (error) {
     next(error);
   }

@@ -25,7 +25,7 @@ export async function create(req, res, next) {
     }
     req.body.password = await generateHash(req.body.password);
     await new User(req.body).save();
-    return res.status(200).json({});
+    return res.status(201).json({});
   } catch (error) {
     next(error);
   }

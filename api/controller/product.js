@@ -107,7 +107,7 @@ export async function create(req, res, next) {
     body.ownerId = req.userId;
     let product = new Product(body);
     await product.save();
-    return res.status(200).json(product);
+    return res.status(201).json(product);
   } catch (error) {
     next(error);
   }
