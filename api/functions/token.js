@@ -1,13 +1,13 @@
 import jwt from "jsonwebtoken";
 
-export function createTokens(username) {
+export function createTokens(username, accessTokenExpiresIn = "10m") {
   try {
     let accessToken = jwt.sign(
       { username: username, rand: Math.random(), type: "access" },
       process.env.PRIVATE_KEY,
       {
         algorithm: "RS256",
-        expiresIn: "10m",
+        expiresIn: accessTokenExpiresIn,
       },
     );
     let refreshToken = jwt.sign(

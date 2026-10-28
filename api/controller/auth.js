@@ -5,6 +5,7 @@ import {
   loginUserValidator,
   registerUserValidator,
 } from "../functions/validators.js";
+import { fieldValidationError } from "../handlers/validation.js";
 
 import { get as getRedis } from "../functions/redis.js";
 
