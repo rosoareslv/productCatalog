@@ -18,7 +18,7 @@ export async function create(req, res, next) {
     }
     let username = await User.findOne({ username: req.body.username });
     if (username != null) {
-      return res.status(403).json({
+      return res.status(409).json({
         message: "Unavailable username",
         username: req.body.username,
       });
