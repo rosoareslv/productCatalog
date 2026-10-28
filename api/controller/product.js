@@ -4,6 +4,7 @@ import {
   updateProductValidator,
   registerProductValidator,
 } from "../functions/validators.js";
+import { fieldValidationError } from "../handlers/validation.js";
 
 export async function getAll(req, res, next) {
   try {
@@ -50,11 +51,10 @@ export async function deleteOne(req, res, next) {
 
 export async function update(req, res, next) {
   try {
-    let productValidation = updateProductValidator.validate(req.body);
-    if (productValidation.error != undefined) {
-      return res.status(400).json({
-        error: productValidation.error.message,
-      });
+    let validate = updateProductValidator.validate(req.body);
+    if (validate.error != undefined) {
+      res.validationMessage = validate.error.message;
+      return fieldValidationError(req, res);
     }
     if (req.body.category != undefined) {
       let category = await Category.findOne({
@@ -86,11 +86,10 @@ export async function update(req, res, next) {
 
 export async function create(req, res, next) {
   try {
-    let productValidation = registerProductValidator.validate(req.body);
-    if (productValidation.error != undefined) {
-      return res.status(400).json({
-        error: productValidation.error.message,
-      });
+    let validate = registerProductValidator.validate(req.body);
+    if (validate.error != undefined) {
+      res.validationMessage = validate.error.message;
+      return fieldValidationError(req, res);
     }
     if (req.body.category != undefined) {
       let category = await Category.findOne({

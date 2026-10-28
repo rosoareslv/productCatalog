@@ -10,11 +10,10 @@ import { get as getRedis } from "../functions/redis.js";
 
 export async function create(req, res, next) {
   try {
-    let validation = registerUserValidator.validate(req.body);
-    if (validation.error != undefined) {
-      return res.status(400).json({
-        error: validation.error.message,
-      });
+    let validate = registerUserValidator.validate(req.body);
+    if (validate.error != undefined) {
+      res.validationMessage = validate.error.message;
+      return fieldValidationError(req, res);
     }
     let username = await User.findOne({ username: req.body.username });
     if (username != null) {
@@ -33,11 +32,10 @@ export async function create(req, res, next) {
 
 export async function login(req, res, next) {
   try {
-    let loginValidation = loginUserValidator.validate(req.body);
-    if (loginValidation.error != undefined) {
-      return res.status(400).json({
-        error: loginValidation.error.message,
-      });
+    let validate = loginUserValidator.validate(req.body);
+    if (validate.error != undefined) {
+      res.validationMessage = validate.error.message;
+      return fieldValidationError(req, res);
     }
     let user_db = await User.findOne({ username: req.body.username });
     if (user_db == null) {
