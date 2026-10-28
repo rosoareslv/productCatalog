@@ -92,6 +92,5 @@ docker compose -f docker-compose.yaml up test
 - Rate limiting
 - Performance metrics
 - Structured logs
-- Healthcheck
 - Set resources usage (CPU, RAM...) in compose files
 - Two factor authentication
