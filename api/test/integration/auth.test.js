@@ -1,6 +1,6 @@
 import request from "supertest";
 import app from "../../app.js";
-import { afterAll } from "vitest";
+import { createTokens } from "../../functions/token.js";
 
 const agent = request.agent(app); // the cookies are saved and redirected automatically
 
@@ -15,7 +15,7 @@ describe("Endpoints /auth", () => {
       const res = await agent
         .post("/auth/register")
         .send({ name: "Rodrigo", username: username, password: "12345678" });
-      expect(res.status).toEqual(200);
+      expect(res.status).toEqual(201);
       expect(res.type).toEqual("application/json");
       expect(res.body).toEqual({});
     });
@@ -24,7 +24,7 @@ describe("Endpoints /auth", () => {
       const res = await agent
         .post("/auth/register")
         .send({ name: "Rodrigo", username: username, password: "12345678" });
-      expect(res.status).toEqual(403);
+      expect(res.status).toEqual(409);
       expect(res.type).toEqual("application/json");
       expect(res.body).toEqual({
         message: "Unavailable username",
@@ -79,7 +79,7 @@ describe("Endpoints /auth", () => {
         });
       });
 
-      it("Get /product - With invalid accessToken test", async () => {
+      it("Invalid accessToken test", async () => {
         const res = await agent.get("/product").set({
           Authorization: "Bearer " + accessToken + "123",
         });
@@ -90,7 +90,7 @@ describe("Endpoints /auth", () => {
         });
       });
 
-      it("Get /product - With valid accessToken test", async () => {
+      it("Valid accessToken test", async () => {
         const res = await agent.get("/product").set({
           Authorization: "Bearer " + accessToken,
         });
@@ -98,6 +98,30 @@ describe("Endpoints /auth", () => {
         expect(res.type).toEqual("application/json");
         expect(res.body).toEqual({
           products: [],
+        });
+      });
+
+      it("Expired accessToken test", async () => {
+        let expiredAccessToken = createTokens(username, 0).accessToken;
+        console.log(expiredAccessToken)
+        const res = await agent.get("/product").set({
+          Authorization: "Bearer " + expiredAccessToken,
+        });
+        expect(res.status).toEqual(401);
+        expect(res.type).toEqual("application/json");
+        expect(res.body).toEqual({
+          message: "Expired token",
+        });
+      });
+
+      it("RefreshToken used as accessToken ", async () => {
+        const res = await agent.get("/product").set({
+          Authorization: "Bearer " + refreshToken,
+        });
+        expect(res.status).toEqual(401);
+        expect(res.type).toEqual("application/json");
+        expect(res.body).toEqual({
+          message: "Invalid token",
         });
       });
 

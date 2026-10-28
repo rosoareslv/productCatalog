@@ -12,12 +12,12 @@ beforeAll(async () => {
   await agent.post("/auth/register").send({
     name: "testUser",
     username: username,
-    password: "123",
+    password: "12345678",
   });
   //authenticate
   const res = await agent
     .post("/auth/login")
-    .send({ username: username, password: "123" });
+    .send({ username: username, password: "12345678" });
 
   header = {
     Authorization: "Bearer " + res.body.accessToken,
@@ -25,7 +25,7 @@ beforeAll(async () => {
 });
 
 describe("Endpoints /category", () => {
-  it("POST /category - Criar categoria", async () => {
+  it("POST /category - Create category", async () => {
     const res = await agent
       .post("/category")
       .set(header)
@@ -33,7 +33,7 @@ describe("Endpoints /category", () => {
         title: Math.random().toString(36).substring(2),
         description: "teste automatizado",
       });
-    expect(res.status).toEqual(200);
+    expect(res.status).toEqual(201);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("title");
     expect(res.body).toHaveProperty("description");
@@ -43,7 +43,7 @@ describe("Endpoints /category", () => {
     categoryId = res.body._id;
   });
 
-  it("GET /category/:id - Buscar Categoria", async () => {
+  it("GET /category/:id - Get category", async () => {
     const res = await agent.get(`/category/${categoryId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
@@ -53,14 +53,14 @@ describe("Endpoints /category", () => {
     expect(res.body).toHaveProperty("_id");
   });
 
-  it("GET /category - Buscar todos as categorias", async () => {
+  it("GET /category - Get all categories", async () => {
     const res = await agent.get("/category/").set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(Array.isArray(res.body.categories)).toEqual(true);
   });
 
-  it("DELETE /category - Deletar categoria", async () => {
+  it("DELETE /category - Delete category", async () => {
     const res = await agent.delete(`/category/${categoryId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");

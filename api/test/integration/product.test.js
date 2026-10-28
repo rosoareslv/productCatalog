@@ -13,12 +13,12 @@ beforeAll(async () => {
   await agent.post("/auth/register").send({
     name: "testUser",
     username: username,
-    password: "123",
+    password: "12345678",
   });
   //authenticate
   const resToken = await agent
     .post("/auth/login")
-    .send({ username: username, password: "123" });
+    .send({ username: username, password: "12345678" });
   header = {
     Authorization: "Bearer " + resToken.body.accessToken,
   };
@@ -34,13 +34,13 @@ beforeAll(async () => {
 });
 
 describe("Endpoints /product", () => {
-  it("POST /product - Criar Produto", async () => {
+  it("POST /product - Create product", async () => {
     const res = await agent.post("/product").set(header).send({
       title: "Playstation 6",
       description: "console da décima geração da Sony",
       price: 6000,
     });
-    expect(res.status).toEqual(200);
+    expect(res.status).toEqual(201);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("title");
     expect(res.body).toHaveProperty("description");
@@ -52,15 +52,15 @@ describe("Endpoints /product", () => {
     productId = res.body._id;
   });
 
-  it("PATCH /product/:id - Atualizar Produto adicionando Categoria que não existe", async () => {
+  it("PATCH /product/:id - Update product with nonexistent category", async () => {
     const res = await agent.patch(`/product/${productId}`).set(header).send({
-      category: "categoriaNaoExiste",
+      category: "falseCategory",
     });
     expect(res.status).toEqual(404);
     expect(res.body).toHaveProperty("message");
   });
 
-  it("PATCH /product/:id - Atualizar Produto adicionando Categoria que existe", async () => {
+  it("PATCH /product/:id - Update product with valid category", async () => {
     const res = await agent.patch(`/product/${productId}`).set(header).send({
       category: category,
     });
@@ -75,7 +75,7 @@ describe("Endpoints /product", () => {
     expect(res.body).toHaveProperty("_id");
   });
 
-  it("GET /product/:id - Buscar Produto", async () => {
+  it("GET /product/:id - Get product", async () => {
     const res = await agent.get(`/product/${productId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
@@ -87,15 +87,14 @@ describe("Endpoints /product", () => {
     expect(res.body).toHaveProperty("_id");
   });
 
-  //It needs to have at least one product to return json with array
-  it("GET /product - Buscar todos os produtos", async () => {
+  it("GET /product - Get all products", async () => {
     const res = await agent.get("/product").set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(Array.isArray(res.body.products)).toEqual(true);
   });
 
-  it("DELETE /product - Deletar produto", async () => {
+  it("DELETE /product - Delete product", async () => {
     const res = await agent.delete(`/product/${productId}`).set(header);
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
