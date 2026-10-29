@@ -28,12 +28,8 @@ Products and Categories stored per user with JWT implementation.
 
 <div align="center">
 <p><b>JWT with Refresh Token</b></p>
-<img src="./docs/jwtWithoutRefreshToken.png" width="600" alt="JWT without refresh token">
+<img src="" width="600" alt="JWT without refresh token">
 </div>
-
-#### Documentation
-
-When app is running, go to _/docs_ endpoint. It follows the openapi specification
 
 #### Endpoints
 
@@ -66,8 +62,6 @@ When app is running, go to _/docs_ endpoint. It follows the openapi specificatio
 npm run keys:generate
 ```
 3. Deploy or Test the application using the commands below for each scenario.
-
-
 
 #### Development Deploy
 
