@@ -84,7 +84,6 @@ docker compose -f docker-compose.yaml up test
 #### To implement:
 
 - Fake data generator for performance workload tests
-- CI/CD
 
 #### Key improvements:
 
