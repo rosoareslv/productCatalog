@@ -60,11 +60,11 @@ When app is running, go to _/docs_ endpoint. It follows the openapi specificatio
 
 #### Setup
 1. Create .env file using the '/configs/.env.example' file using your credentials
-2. Generate JWT Keys pair running the command above which is located inside '/api' folder:
+2. Generate JWT Keys pair running the command below which is located inside '/api' folder:
 ```bash
 npm run keys:generate
 ```
-3. Deploy or Test the application using the commands above for each scenario.
+3. Deploy or Test the application using the commands below for each scenario.
 
 
 
