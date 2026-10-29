@@ -48,7 +48,7 @@ describe("Endpoints /category", () => {
       .post("/category")
       .set(header)
       .send({
-        title: Math.random().toString(36).substring(2)
+        title: Math.random().toString(36).substring(2),
       });
     expect(res.status).toEqual(400);
     expect(res.type).toEqual("application/json");
@@ -73,12 +73,9 @@ describe("Endpoints /category", () => {
   });
 
   it("PATCH /category/id - Update category", async () => {
-    const res = await agent
-      .patch(`/category/${categoryId}`)
-      .set(header)
-      .send({
-        description: "teste automatizado atualizado"
-      });
+    const res = await agent.patch(`/category/${categoryId}`).set(header).send({
+      description: "teste automatizado atualizado",
+    });
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("title");
@@ -88,13 +85,10 @@ describe("Endpoints /category", () => {
   });
 
   it("PATCH /category/id - Update category with invalid body", async () => {
-    const res = await agent
-      .patch(`/category/${categoryId}`)
-      .set(header)
-      .send({
-        description: "teste automatizado atualizado",
-        field: "Invalid field"
-      });
+    const res = await agent.patch(`/category/${categoryId}`).set(header).send({
+      description: "teste automatizado atualizado",
+      field: "Invalid field",
+    });
     expect(res.status).toEqual(400);
     expect(res.type).toEqual("application/json");
     expect(res.body).toHaveProperty("message");

@@ -55,7 +55,7 @@ describe("Endpoints /product", () => {
   it("POST /product - Create product with invalid body", async () => {
     const res = await agent.post("/product").set(header).send({
       title: "XBOX 720",
-      description: "Console brabo da Microsoft"
+      description: "Console brabo da Microsoft",
     });
     expect(res.status).toEqual(400);
     expect(res.type).toEqual("application/json");
