@@ -56,6 +56,8 @@ services:
     image: node:23.8.0
     environment:
       - NODE_ENV=dev
+      - MONGO_HOST=database
+      - REDIS_HOST=whitelist
     env_file:
       - ./configs/.env
     networks:
@@ -80,6 +82,8 @@ services:
       - ./configs/.env
     environment:
       - NODE_ENV=test
+      - MONGO_HOST=database_test
+      - REDIS_HOST=whitelist_test
     volumes:
       - ./api:/api:rw
       - ./logs:/logs:rw
