@@ -8,6 +8,9 @@ services:
       - 81:81
     networks:
       - web_network
+    depends_on:
+      api:
+        condition: service_started
 
   database:
     container_name: database
@@ -47,8 +50,6 @@ services:
     working_dir: /api
     command: bash -c "npm install && npm run dev"
     depends_on:
-      reverse_proxy:
-        condition: service_started
       database:
         condition: service_healthy
       whitelist:
