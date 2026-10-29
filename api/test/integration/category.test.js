@@ -43,6 +43,18 @@ describe("Endpoints /category", () => {
     categoryId = res.body._id;
   });
 
+  it("POST /category - Create category with invalid body", async () => {
+    const res = await agent
+      .post("/category")
+      .set(header)
+      .send({
+        title: Math.random().toString(36).substring(2)
+      });
+    expect(res.status).toEqual(400);
+    expect(res.type).toEqual("application/json");
+    expect(res.body).toHaveProperty("message");
+  });
+
   it("GET /category/:id - Get category", async () => {
     const res = await agent.get(`/category/${categoryId}`).set(header);
     expect(res.status).toEqual(200);
@@ -58,6 +70,34 @@ describe("Endpoints /category", () => {
     expect(res.status).toEqual(200);
     expect(res.type).toEqual("application/json");
     expect(Array.isArray(res.body.categories)).toEqual(true);
+  });
+
+  it("PATCH /category/id - Update category", async () => {
+    const res = await agent
+      .patch(`/category/${categoryId}`)
+      .set(header)
+      .send({
+        description: "teste automatizado atualizado"
+      });
+    expect(res.status).toEqual(200);
+    expect(res.type).toEqual("application/json");
+    expect(res.body).toHaveProperty("title");
+    expect(res.body).toHaveProperty("description");
+    expect(res.body).toHaveProperty("ownerId");
+    expect(res.body).toHaveProperty("_id");
+  });
+
+  it("PATCH /category/id - Update category with invalid body", async () => {
+    const res = await agent
+      .patch(`/category/${categoryId}`)
+      .set(header)
+      .send({
+        description: "teste automatizado atualizado",
+        field: "Invalid field"
+      });
+    expect(res.status).toEqual(400);
+    expect(res.type).toEqual("application/json");
+    expect(res.body).toHaveProperty("message");
   });
 
   it("DELETE /category - Delete category", async () => {

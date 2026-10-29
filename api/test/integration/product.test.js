@@ -52,6 +52,16 @@ describe("Endpoints /product", () => {
     productId = res.body._id;
   });
 
+  it("POST /product - Create product with invalid body", async () => {
+    const res = await agent.post("/product").set(header).send({
+      title: "XBOX 720",
+      description: "Console brabo da Microsoft"
+    });
+    expect(res.status).toEqual(400);
+    expect(res.type).toEqual("application/json");
+    expect(res.body).toHaveProperty("message");
+  });
+
   it("PATCH /product/:id - Update product with nonexistent category", async () => {
     const res = await agent.patch(`/product/${productId}`).set(header).send({
       category: "falseCategory",
