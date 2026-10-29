@@ -1,8 +1,8 @@
 const db = db.getSiblingDB("catalogDB");
 
 db.createUser({
-  user: "master",
-  pwd: "123qwe",
+  user: process.env.MONGO_OWNER_USER,
+  pwd: process.env.MONGO_OWNER_PASSWORD,
   roles: [
     {
       role: "dbOwner",
@@ -12,8 +12,8 @@ db.createUser({
 });
 
 db.createUser({
-  user: "catalogDatabaseApi",
-  pwd: "qwe123",
+  user: process.env.MONGO_API_USER,
+  pwd: process.env.MONGO_API_PASSWORD,
   roles: [
     {
       role: "readWrite",
