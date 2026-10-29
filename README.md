@@ -1,4 +1,5 @@
 ## ProductCatalog API
+[![CI](https://github.com/rosoareslv/productCatalog/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/rosoareslv/productCatalog/actions/workflows/ci.yml)
 
 Products and Categories stored per user with JWT implementation.
 
