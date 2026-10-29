@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const CONNECTION_URL = `mongodb://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
+const CONNECTION_URL = `mongodb://${process.env.MONGO_API_USER}:${process.env.MONGO_API_PASSWORD}@${process.env.MONGO_HOST}:${process.env.MONGO_PORT}/${process.env.MONGO_DATABASE}`;
 
 export async function connect() {
   try {
