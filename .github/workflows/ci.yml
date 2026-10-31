@@ -67,6 +67,6 @@ jobs:
         if: failure()
         run: docker compose logs database whitelist
 
-        - name: Tear down
-          if: always()
-          run: docker compose down -v
+      - name: Tear down
+        if: always()
+        run: docker compose down -v
