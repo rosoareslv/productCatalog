@@ -22,13 +22,11 @@ Products and Categories stored per user with JWT implementation.
 #### JWT implementation flow comparison
 
 <div align="center">
-<p><b>JWT without Refresh Token</b></p>
-<img src="./docs/jwtWithoutRefreshToken.png" width="600" alt="JWT without refresh token">
+<img src="./docs/jwtFlowWithoutRefreshToken.svg" width="600" alt="JWT without refresh token">
 </div>
 
 <div align="center">
-<p><b>JWT with Refresh Token</b></p>
-<img src="" width="600" alt="JWT without refresh token">
+<img src="./docs/jwtFlowWithRefreshToken.svg" width="600" alt="JWT with refresh token">
 </div>
 
 #### Endpoints
