@@ -70,6 +70,14 @@ describe("Endpoints /product", () => {
     expect(res.body).toHaveProperty("message");
   });
 
+  it("PATCH /product/:id - Update product with invalid body", async () => {
+    const res = await agent.patch(`/product/${productId}`).set(header).send({
+      type: "falseTypeField",
+    });
+    expect(res.status).toEqual(400);
+    expect(res.body).toHaveProperty("message");
+  });
+
   it("PATCH /product/:id - Update product with valid category", async () => {
     const res = await agent.patch(`/product/${productId}`).set(header).send({
       category: category,

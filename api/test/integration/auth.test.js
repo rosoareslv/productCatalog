@@ -20,6 +20,15 @@ describe("Endpoints /auth", () => {
       expect(res.body).toEqual({});
     });
 
+    it("POST /auth/register - Create User with invalid body", async () => {
+      const res = await agent
+        .post("/auth/register")
+        .send({ name: "Rodrigo", username: username, password: "12345678", opr: "create" });
+      expect(res.status).toEqual(400);
+      expect(res.type).toEqual("application/json");
+      expect(res.body).toHaveProperty("message");
+    });
+
     it("POST /auth/register -  Unavailable Username", async () => {
       const res = await agent
         .post("/auth/register")
@@ -31,6 +40,15 @@ describe("Endpoints /auth", () => {
         username: username,
       });
     });
+  });
+
+  it("POST /auth/login - Login User with invalid body", async () => {
+    const res = await agent
+      .post("/auth/login")
+      .send({ name: "Rodrigo", password: "12345678" });
+    expect(res.status).toEqual(400);
+    expect(res.type).toEqual("application/json");
+    expect(res.body).toHaveProperty("message");
   });
 
   describe("User authentication test", () => {
